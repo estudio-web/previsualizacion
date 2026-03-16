@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Fernando Quilpatay</title>
+<meta name="description" content="Gestión con hechos. Proyectos reales para el departamento."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#08090c;
+  --dark:#0f1117;
+  --dark2:#181b24;
+  --gold:#c9963a;
+  --gold2:#e8b455;
+  --gold-dim:rgba(201,150,58,.13);
+  --cream:#f7f3ec;
+  --muted:rgba(247,243,236,.50);
+  --line:rgba(201,150,58,.18);
+  --lineW:rgba(247,243,236,.09);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--black);
+  color:var(--cream);
+  overflow-x:hidden;
+  cursor:none
+}
+a{text-decoration:none;color:inherit}
+button{font:inherit;border:none;cursor:none}
+
+/* CURSOR */
+#c{
+  width:8px;height:8px;background:var(--gold);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);transition:width .18s,height .18s
+}
+#cr{
+  width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);transition:width .22s,height .22s,opacity .22s;opacity:.45
+}
+
+/* NAV */
+.bar{
+  position:fixed;top:0;left:0;right:0;z-index:900;height:66px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,4vw,64px);
+  background:rgba(8,9,12,.78);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--lineW)
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark{
+  width:36px;height:36px;border:1px solid var(--gold);
+  display:grid;place-items:center;font-family:'Playfair Display',serif;
+  font-size:.85rem;font-weight:700;color:var(--gold);position:relative
+}
+.logo-mark::before{content:'';position:absolute;inset:3px;background:var(--gold-dim)}
+.logo-mark span{position:relative;z-index:1}
+.logo-name{
+  font-family:'Playfair Display',serif;
+  font-size:.95rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase
+}
+nav{display:flex;gap:2px}
+nav a{
+  padding:9px 16px;font-size:.73rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);transition:color .25s;position:relative
+}
+nav a::after{
+  content:'';position:absolute;bottom:4px;left:16px;right:16px;height:1px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s
+}
+nav a:hover{color:var(--cream)}
+nav a:hover::after{transform:scaleX(1)}
+
+/* HERO */
+.hero{
+  position:relative;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden
+}
+.hero-img{position:relative;overflow:hidden}
+.hero-img-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,var(--black) 0%,transparent 38%),
+    linear-gradient(to top,var(--black) 0%,transparent 25%),
+    url('https://i.ibb.co/S7P3htMv/Gemini-Generated-Image-21nsqq21nsqq21ns.webp') center/cover no-repeat
+}
+.hero-img::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--gold) 40%,var(--gold) 60%,transparent);z-index:3
+}
+.hero-text{
+  position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;
+  padding:120px clamp(28px,5vw,80px) 80px;background:var(--black)
+}
+.eyebrow{
+  display:flex;align-items:center;gap:14px;margin-bottom:32px;opacity:0;animation:up .7s .1s forwards
+}
+.eyebrow::before{content:'';width:32px;height:1px;background:var(--gold);flex-shrink:0}
+.eyebrow span{
+  font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)
+}
+.hero-title{
+  font-family:'Playfair Display',serif;font-size:clamp(3.2rem,6vw,6.8rem);
+  font-weight:900;line-height:.93;letter-spacing:-.025em;opacity:0;animation:up .85s .28s forwards
+}
+.hero-title em{display:block;font-style:italic;font-weight:400;color:var(--gold)}
+.rule{
+  width:48px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);
+  margin:28px 0;opacity:0;animation:up .7s .45s forwards
+}
+.hero-lead{
+  font-size:.97rem;font-weight:300;line-height:1.78;color:var(--muted);
+  max-width:420px;opacity:0;animation:up .7s .56s forwards
+}
+.hero-cta{
+  display:flex;gap:12px;flex-wrap:wrap;margin-top:36px;opacity:0;animation:up .7s .7s forwards
+}
+.hero-stats{
+  display:flex;gap:0;margin-top:52px;border:1px solid var(--lineW);opacity:0;animation:up .7s .85s forwards
+}
+.stat{
+  flex:1;padding:18px 14px;text-align:center;border-right:1px solid var(--lineW);
+  position:relative;overflow:hidden
+}
+.stat:last-child{border-right:none}
+.stat::before{
+  content:'';position:absolute;inset:0;background:var(--gold-dim);
+  transform:scaleY(0);transform-origin:bottom;transition:transform .35s ease
+}
+.stat:hover::before{transform:scaleY(1)}
+.stat-n{
+  font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);
+  position:relative;z-index:1
+}
+.stat-l{
+  display:block;font-size:.67rem;font-weight:500;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted);margin-top:4px;position:relative;z-index:1
+}
+.hero-badge{
+  position:absolute;bottom:36px;left:36px;z-index:4;opacity:0;animation:up .8s .95s forwards
+}
+.badge-inner{border-top:2px solid var(--gold);padding-top:14px}
+.badge-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;line-height:1.1}
+.badge-role{
+  margin-top:5px;font-size:.72rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--gold)
+}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 28px;
+  font-size:.77rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  position:relative;overflow:hidden;transition:color .3s
+}
+.btn-gold{background:var(--gold);color:var(--black)}
+.btn-gold::before{
+  content:'';position:absolute;inset:0;background:var(--gold2);
+  transform:translateX(-101%);transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:0
+}
+.btn-gold:hover::before{transform:translateX(0)}
+.btn-gold>*{position:relative;z-index:1}
+.btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--lineW)}
+.btn-ghost::before{
+  content:'';position:absolute;inset:0;background:var(--cream);
+  transform:translateX(-101%);transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:0
+}
+.btn-ghost:hover{color:var(--black)}
+.btn-ghost:hover::before{transform:translateX(0)}
+.btn-ghost>*{position:relative;z-index:1}
+.arr{
+  width:18px;height:18px;border:1.5px solid currentColor;border-radius:50%;
+  display:grid;place-items:center;font-size:.6rem
+}
+
+/* MARQUEE */
+.marquee{
+  background:var(--gold);padding:16px 0;overflow:hidden;
+  border-top:1px solid var(--gold2);border-bottom:1px solid rgba(0,0,0,.18)
+}
+.mtrack{display:flex;animation:slide 20s linear infinite;width:max-content}
+.mitem{
+  display:flex;align-items:center;gap:18px;padding:0 28px;white-space:nowrap;
+  font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;
+  font-style:italic;color:var(--black);opacity:.88
+}
+.mdot{width:4px;height:4px;background:var(--black);border-radius:50%;opacity:.35;flex-shrink:0}
+
+/* SECTIONS */
+.s{padding:clamp(64px,9vw,120px) clamp(20px,4vw,72px)}
+.s-in{max-width:1240px;margin:0 auto}
+.slabel{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.slabel::before{content:'';width:20px;height:1px;background:var(--gold)}
+.slabel span{
+  font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)
+}
+.stitle{
+  font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.8rem);
+  font-weight:900;line-height:1.05;letter-spacing:-.02em
+}
+.stitle em{font-style:italic;font-weight:400}
+
+/* GESTIÓN */
+.manage-bg{background:var(--dark)}
+.mgrid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--lineW);border:1px solid var(--lineW);margin-top:48px
+}
+.mcard{
+  background:var(--dark);padding:38px 30px;position:relative;overflow:hidden;transition:background .3s
+}
+.mcard::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .45s ease
+}
+.mcard:hover{background:var(--dark2)}
+.mcard:hover::after{transform:scaleX(1)}
+.mnum{
+  font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;
+  color:rgba(201,150,58,.1);line-height:1;margin-bottom:18px;letter-spacing:-.04em;transition:color .3s
+}
+.mcard:hover .mnum{color:rgba(201,150,58,.2)}
+.mtitle{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
+.mtext{font-size:.86rem;font-weight:300;line-height:1.7;color:var(--muted)}
+
+/* PROYECTOS */
+.projects-bg{background:var(--black)}
+.ptop{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px
+}
+.toolbar{
+  display:flex;gap:2px;background:var(--dark);border:1px solid var(--lineW);padding:4px;flex-wrap:wrap
+}
+.fb{
+  padding:8px 15px;font-size:.71rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);background:transparent;border:none;transition:all .22s
+}
+.fb.on,.fb:hover{background:var(--gold);color:var(--black)}
+.docs{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--lineW);border:1px solid var(--lineW)
+}
+.doc{
+  background:var(--dark);padding:26px 22px;display:flex;flex-direction:column;gap:12px;
+  position:relative;overflow:hidden;transition:background .3s
+}
+.doc::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  transform:scaleX(0);transform-origin:left;transition:transform .45s ease
+}
+.doc:hover{background:var(--dark2)}
+.doc:hover::after{transform:scaleX(1)}
+.doc-idx{
+  font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)
+}
+.doc-title{
+  font-family:'Playfair Display',serif;font-size:1.08rem;font-weight:700;line-height:1.3
+}
+.doc-desc{font-size:.83rem;font-weight:300;line-height:1.65;color:var(--muted);flex:1}
+.doc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.dtag{
+  font-size:.67rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 9px;border:1px solid var(--lineW);color:var(--muted)
+}
+.doc-acts{display:flex;gap:7px;margin-top:4px}
+.dpri{
+  flex:1;padding:11px 12px;background:var(--gold);color:var(--black);
+  font-size:.71rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  text-align:center;position:relative;overflow:hidden;transition:color .22s
+}
+.dpri::before{
+  content:'';position:absolute;inset:0;background:var(--gold2);
+  transform:translateX(-101%);transition:transform .3s ease;z-index:0
+}
+.dpri:hover::before{transform:translateX(0)}
+.dpri span{position:relative;z-index:1}
+.dsec{
+  padding:11px 14px;border:1px solid var(--lineW);color:var(--muted);
+  font-size:.71rem;font-weight:500;text-align:center;transition:all .22s
+}
+.dsec:hover{border-color:var(--gold);color:var(--gold)}
+
+/* PROPUESTAS */
+.prop-bg{background:var(--cream);color:var(--black)}
+.prop-bg .slabel::before{background:var(--gold)}
+.prop-bg .slabel span{color:var(--gold)}
+.prop-bg .stitle{color:var(--black)}
+.prop-bg .stitle em{color:var(--gold)}
+.prop-intro{
+  max-width:560px;font-size:.96rem;font-weight:300;line-height:1.78;
+  color:rgba(8,9,12,.52);margin-top:12px;
+}
+.prop-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(8,9,12,.1);border:1px solid rgba(8,9,12,.1);margin-top:48px;
+}
+.prop-card{
+  background:var(--cream);padding:36px 28px;position:relative;overflow:hidden;transition:background .3s;
+}
+.prop-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  transform:scaleX(0);transform-origin:left;transition:transform .45s ease;
+}
+.prop-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at bottom right,rgba(201,150,58,.07),transparent 60%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
+}
+.prop-card:hover{background:#f0ebe0}
+.prop-card:hover::before{transform:scaleX(1)}
+.prop-card:hover::after{opacity:1}
+.prop-icon{
+  width:44px;height:44px;border:1px solid rgba(201,150,58,.3);display:grid;place-items:center;
+  font-size:1.1rem;margin-bottom:20px;background:rgba(201,150,58,.06);position:relative;z-index:1;
+}
+.prop-num{
+  font-family:'Playfair Display',serif;font-size:.72rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;position:relative;z-index:1;
+}
+.prop-title{
+  font-family:'Playfair Display',serif;font-size:1.12rem;font-weight:700;line-height:1.25;
+  margin-bottom:10px;color:var(--black);position:relative;z-index:1;
+}
+.prop-text{
+  font-size:.84rem;font-weight:300;line-height:1.7;color:rgba(8,9,12,.55);position:relative;z-index:1;
+}
+.prop-featured{
+  grid-column:1/-1;background:var(--black);padding:44px 40px;display:grid;
+  grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative;overflow:hidden;
+}
+.prop-featured::before{
+  content:'';position:absolute;top:-60%;left:-10%;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(201,150,58,.09),transparent 65%);pointer-events:none;
+}
+.prop-featured-label{
+  font-size:.7rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.prop-featured-label::before{content:'';width:18px;height:1px;background:var(--gold)}
+.prop-featured-title{
+  font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;
+  line-height:1.08;letter-spacing:-.02em;color:var(--cream);
+}
+.prop-featured-title em{font-style:italic;font-weight:400;color:var(--gold)}
+.prop-featured-text{
+  font-size:.9rem;font-weight:300;line-height:1.78;color:rgba(247,243,236,.5);margin-top:14px;
+}
+.prop-featured-right{display:flex;flex-direction:column;gap:2px}
+.prop-commit{
+  display:flex;align-items:flex-start;gap:14px;padding:16px 18px;
+  border:1px solid rgba(247,243,236,.07);background:rgba(247,243,236,.03);
+}
+.prop-commit-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0;margin-top:6px}
+.prop-commit-text{
+  font-size:.87rem;font-weight:400;line-height:1.6;color:rgba(247,243,236,.65);
+}
+.prop-commit-text strong{
+  display:block;font-weight:600;color:var(--cream);margin-bottom:2px;font-size:.88rem;
+}
+
+/* CTA */
+.cta-bg{background:var(--dark);position:relative;overflow:hidden}
+.cta-bg::before{
+  content:'';position:absolute;top:-50%;left:-20%;width:700px;height:700px;
+  background:radial-gradient(circle,rgba(201,150,58,.07),transparent 65%);pointer-events:none
+}
+.cta-in{
+  position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;align-items:center;gap:48px;
+}
+.cta-title{
+  font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,4rem);
+  font-weight:900;line-height:1;letter-spacing:-.03em
+}
+.cta-title em{color:var(--gold);font-style:italic;font-weight:400}
+.cta-sub{
+  margin-top:12px;font-size:.9rem;font-weight:300;line-height:1.72;color:var(--muted);max-width:440px
+}
+
+/* CONTACTO */
+.contact-bg{background:var(--black)}
+.cgrid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--lineW);
+  border:1px solid var(--lineW);margin-top:48px
+}
+.ccol{background:var(--dark);padding:44px 38px}
+.ctitle{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:22px}
+.clist{list-style:none;display:flex;flex-direction:column;gap:2px}
+.clist li{
+  padding:13px 14px;background:var(--black);font-size:.87rem;font-weight:400;color:var(--muted);
+  border-left:2px solid transparent;transition:all .24s
+}
+.clist li:hover{border-left-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+.cp{font-size:.9rem;font-weight:300;line-height:1.8;color:var(--muted)}
+.contact-link{margin-top:26px}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid var(--lineW);padding:22px clamp(20px,4vw,72px)}
+.foot{
+  max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
+}
+.fcopy{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(247,243,236,.18)}
+.fbrand{
+  font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--gold);
+  letter-spacing:.08em;text-transform:uppercase
+}
+
+/* MODAL */
+.modal{
+  position:fixed;inset:0;z-index:9999;background:rgba(8,9,12,.94);
+  display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)
+}
+.modal.on{display:flex}
+.mbox{
+  width:min(1260px,100%);height:min(93vh,960px);background:var(--dark);
+  display:flex;flex-direction:column;border-top:2px solid var(--gold);animation:up .3s ease
+}
+.mhead{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 18px;border-bottom:1px solid var(--lineW);background:var(--dark2)
+}
+.mttl{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;flex:1}
+.mctrl{display:flex;gap:7px}
+.mbtn{
+  width:36px;height:36px;border:1px solid var(--lineW);background:transparent;color:var(--cream);
+  display:grid;place-items:center;font-size:.85rem;text-decoration:none;transition:all .2s
+}
+.mbtn:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.mframe{flex:1;width:100%;border:none;background:#0f1117}
+
+/* REVEAL */
+.r{opacity:0;transform:translateY(22px);transition:opacity .68s ease,transform .68s ease}
+.r.v{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+.hide{display:none!important}
+
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media(max-width:1100px){
+  .hero{grid-template-columns:1fr}
+  .hero-img{min-height:52vw}
+  .hero-text{order:-1}
+  .hero-img-bg{
+    background:
+      linear-gradient(to bottom,var(--black),transparent 22%),
+      linear-gradient(to top,var(--black),transparent 22%),
+      url('https://i.ibb.co/S7P3htMv/Gemini-Generated-Image-21nsqq21nsqq21ns.webp') center/cover no-repeat
+  }
+  .mgrid{grid-template-columns:1fr 1fr}
+  .docs{grid-template-columns:1fr 1fr}
+  .prop-grid{grid-template-columns:1fr 1fr}
+  .prop-featured{grid-template-columns:1fr}
+  .cta-in{grid-template-columns:1fr}
+  .cgrid{grid-template-columns:1fr}
+}
+@media(max-width:680px){
+  nav{display:none}
+  .hero-text{padding:96px 20px 48px}
+  .hero-img{min-height:68vw}
+  .mgrid,.docs,.prop-grid,.cgrid{grid-template-columns:1fr}
+  .prop-featured{padding:32px 24px;gap:28px}
+  .hero-stats{flex-wrap:wrap}
+  .stat{min-width:50%}
+  body{cursor:auto}
+  #c,#cr{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="c"></div>
+<div id="cr"></div>
+
+<header class="bar">
+  <a class="logo" href="#top">
+    <div class="logo-mark"><span>FQ</span></div>
+    <div class="logo-name">Fernando Quilpatay</div>
+  </a>
+  <nav>
+    <a href="#gestion">Gestión</a>
+    <a href="#proyectos">Proyectos</a>
+    <a href="#propuestas">Propuestas</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-text">
+    <div class="eyebrow"><span>Iglesia · San Juan · 2026</span></div>
+    <h1 class="hero-title">
+      Hechos,<br>no<br><em>discursos.</em>
+    </h1>
+    <div class="rule"></div>
+    <p class="hero-lead">Proyectos reales. Documentación pública. Presencia concreta en cada localidad.</p>
+
+    <div class="hero-cta">
+      <a href="#proyectos" class="btn btn-gold"><span>Ver proyectos</span><span class="arr">→</span></a>
+      <a href="#propuestas" class="btn btn-ghost"><span>Nuevas propuestas</span></a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-n">5</div><span class="stat-l">Proyectos</span></div>
+      <div class="stat"><div class="stat-n">PDF</div><span class="stat-l">Documentos</span></div>
+      <div class="stat"><div class="stat-n">24/7</div><span class="stat-l">Disponible</span></div>
+    </div>
+  </div>
+
+  <div class="hero-img">
+    <div class="hero-img-bg"></div>
+    <div class="hero-badge">
+      <div class="badge-inner">
+        <div class="badge-name">Fernando Quilpatay</div>
+        <div class="badge-role">Ex Concejal · Referente local</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="mtrack">
+    <div class="mitem">Gestión con presencia<span class="mdot"></span></div>
+    <div class="mitem">Proyectos reales<span class="mdot"></span></div>
+    <div class="mitem">Documentación pública<span class="mdot"></span></div>
+    <div class="mitem">Construyendo Iglesia<span class="mdot"></span></div>
+    <div class="mitem">Desarrollo local<span class="mdot"></span></div>
+    <div class="mitem">Gestión con presencia<span class="mdot"></span></div>
+    <div class="mitem">Proyectos reales<span class="mdot"></span></div>
+    <div class="mitem">Documentación pública<span class="mdot"></span></div>
+    <div class="mitem">Desarrollo local<span class="mdot"></span></div>
+  </div>
+</div>
+
+<section class="s manage-bg" id="gestion">
+  <div class="s-in">
+    <div class="slabel r"><span>Ejes de trabajo</span></div>
+    <h2 class="stitle r d1">Una gestión que<br><em>se puede leer.</em></h2>
+
+    <div class="mgrid">
+      <div class="mcard r d1">
+        <div class="mnum">01</div>
+        <h3 class="mtitle">Trabajo institucional</h3>
+        <p class="mtext">Pedidos e iniciativas con impacto real. Sin rodeos.</p>
+      </div>
+      <div class="mcard r d2">
+        <div class="mnum">02</div>
+        <h3 class="mtitle">Documentos abiertos</h3>
+        <p class="mtext">Todo en PDF, sin intermediarios, sin letra chica.</p>
+      </div>
+      <div class="mcard r d3">
+        <div class="mnum">03</div>
+        <h3 class="mtitle">Raíz local</h3>
+        <p class="mtext">Servicios, educación, turismo y empleo desde y para el departamento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s projects-bg" id="proyectos">
+  <div class="s-in">
+    <div class="ptop">
+      <div>
+        <div class="slabel r"><span>Proyectos</span></div>
+        <h2 class="stitle r d1">Consultá cada<br><em>iniciativa.</em></h2>
+      </div>
+
+      <div class="toolbar r">
+        <button class="fb on" data-f="all">Todos</button>
+        <button class="fb" data-f="servicios">Servicios</button>
+        <button class="fb" data-f="educacion">Educación</button>
+        <button class="fb" data-f="infraestructura">Infraestructura</button>
+        <button class="fb" data-f="desarrollo">Desarrollo</button>
+      </div>
+    </div>
+
+    <div class="docs">
+      <article class="doc r" data-cat="servicios">
+        <div class="doc-idx">01 · Servicios</div>
+        <h3 class="doc-title">Cajero automático para Las Flores y Villa Iglesia</h3>
+        <p class="doc-desc">Acceso bancario donde no había. Impacto directo en la vida cotidiana.</p>
+        <div class="doc-tags"><span class="dtag">Servicios</span><span class="dtag">Las Flores</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Cajero automático para Las Flores y Villa Iglesia" data-p="docs/proyecto1.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto1.pdf" target="_blank">↗</a>
+        </div>
+      </article>
+
+      <article class="doc r d1" data-cat="desarrollo">
+        <div class="doc-idx">02 · Trabajo Local</div>
+        <h3 class="doc-title">Prioridad para mano de obra local en minería</h3>
+        <p class="doc-desc">Arraigo real. Trabajadores del departamento primero.</p>
+        <div class="doc-tags"><span class="dtag">Trabajo</span><span class="dtag">Minería</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Prioridad para mano de obra local en minería" data-p="docs/proyecto2.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto2.pdf" target="_blank">↗</a>
+        </div>
+      </article>
+
+      <article class="doc r d2" data-cat="educacion">
+        <div class="doc-idx">03 · Educación</div>
+        <h3 class="doc-title">Escuelas secundarias en localidades sin cobertura</h3>
+        <p class="doc-desc">Oportunidades reales para jóvenes que hoy no tienen acceso.</p>
+        <div class="doc-tags"><span class="dtag">Educación</span><span class="dtag">Localidades</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Escuelas secundarias en localidades sin cobertura" data-p="docs/proyecto3.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto3.pdf" target="_blank">↗</a>
+        </div>
+      </article>
+
+      <article class="doc r" data-cat="infraestructura">
+        <div class="doc-idx">04 · Infraestructura</div>
+        <h3 class="doc-title">Pavimentación en el área del llano</h3>
+        <p class="doc-desc">Mejoras viales concretas en sectores estratégicos del departamento.</p>
+        <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Las Flores</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Pavimentación en el área del llano" data-p="docs/proyecto4.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto4.pdf" target="_blank">↗</a>
+        </div>
+      </article>
+
+      <article class="doc r d1" data-cat="desarrollo">
+        <div class="doc-idx">05 · Turismo</div>
+        <h3 class="doc-title">Activación de puntos turísticos y termales</h3>
+        <p class="doc-desc">Espacios con potencial real. Empleo y desarrollo para la región.</p>
+        <div class="doc-tags"><span class="dtag">Turismo</span><span class="dtag">Desarrollo</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Activación de puntos turísticos y termales" data-p="docs/proyecto5.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto5.pdf" target="_blank">↗</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="s prop-bg" id="propuestas">
+  <div class="s-in">
+    <div class="slabel r"><span>Si soy intendente</span></div>
+    <h2 class="stitle r d1">Compromisos para el<br><em>Departamento Iglesia.</em></h2>
+    <p class="prop-intro r d2">No son promesas vacías. Son compromisos concretos, con nombre y lugar, para los que vivimos acá.</p>
+
+    <div class="prop-grid">
+      <div class="prop-card r d1">
+        <div class="prop-icon">💧</div>
+        <div class="prop-num">01 · Infraestructura</div>
+        <h3 class="prop-title">Agua potable en todas las localidades</h3>
+        <p class="prop-text">Extensión de redes de agua potable y cloacas en Villa Iglesia, Las Flores y parajes rurales. Ningún vecino sin acceso básico.</p>
+      </div>
+
+      <div class="prop-card r d2">
+        <div class="prop-icon">🛣️</div>
+        <div class="prop-num">02 · Conectividad</div>
+        <h3 class="prop-title">Rutas y accesos pavimentados</h3>
+        <p class="prop-text">Plan de pavimentación progresivo para los caminos que conectan las localidades del departamento. Prioridad en accesos a zonas productivas y educativas.</p>
+      </div>
+
+      <div class="prop-card r d3">
+        <div class="prop-icon">🏥</div>
+        <div class="prop-num">03 · Salud</div>
+        <h3 class="prop-title">Centro de salud con especialidades</h3>
+        <p class="prop-text">Ampliación del servicio de salud local con especialidades básicas y guardia permanente. Que nadie tenga que viajar a San Juan para una consulta urgente.</p>
+      </div>
+
+      <div class="prop-card r d1">
+        <div class="prop-icon">⚒️</div>
+        <div class="prop-num">04 · Empleo</div>
+        <h3 class="prop-title">Fondo municipal de empleo local</h3>
+        <p class="prop-text">Creación de un fondo de apoyo para emprendedores y trabajadores locales, con prioridad para jóvenes y sectores productivos del departamento.</p>
+      </div>
+
+      <div class="prop-card r d2">
+        <div class="prop-icon">🎓</div>
+        <div class="prop-num">05 · Educación</div>
+        <h3 class="prop-title">Más y mejores escuelas</h3>
+        <p class="prop-text">Refacción y equipamiento de establecimientos educativos. Transporte escolar garantizado para chicos de zonas rurales alejadas de los centros.</p>
+      </div>
+
+      <div class="prop-card r d3">
+        <div class="prop-icon">🌄</div>
+        <div class="prop-num">06 · Turismo</div>
+        <h3 class="prop-title">Turismo como motor económico</h3>
+        <p class="prop-text">Plan integral de promoción turística del departamento: termas, paisajes, rutas culturales. Generación de empleo genuino desde los recursos que ya tenemos.</p>
+      </div>
+
+      <div class="prop-featured r">
+        <div>
+          <div class="prop-featured-label">Compromiso central</div>
+          <h3 class="prop-featured-title">Un municipio<br>presente en<br><em>cada rincón.</em></h3>
+          <p class="prop-featured-text">La intendencia no es una oficina en Villa Iglesia. Es presencia real en cada paraje, cada escuela, cada vecino que necesita una respuesta.</p>
+        </div>
+
+        <div class="prop-featured-right">
+          <div class="prop-commit">
+            <div class="prop-commit-dot"></div>
+            <div class="prop-commit-text"><strong>Atención descentralizada</strong>Delegaciones municipales activas en las principales localidades del departamento.</div>
+          </div>
+          <div class="prop-commit">
+            <div class="prop-commit-dot"></div>
+            <div class="prop-commit-text"><strong>Presupuesto transparente</strong>Publicación mensual del gasto municipal, accesible para cualquier vecino.</div>
+          </div>
+          <div class="prop-commit">
+            <div class="prop-commit-dot"></div>
+            <div class="prop-commit-text"><strong>Participación ciudadana</strong>Audiencias públicas anuales para definir prioridades de inversión junto a la comunidad.</div>
+          </div>
+          <div class="prop-commit">
+            <div class="prop-commit-dot"></div>
+            <div class="prop-commit-text"><strong>Minería con beneficio local</strong>Negociación activa para que los royalties mineros queden y se inviertan en el departamento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s cta-bg">
+  <div class="s-in">
+    <div class="cta-in">
+      <div class="r">
+        <h2 class="cta-title">¿Compartís<br><em>estas ideas?</em></h2>
+        <p class="cta-sub">Sumate. El departamento lo construimos entre todos.</p>
+      </div>
+      <div class="r d1">
+        <a href="https://wa.me/5492640000000" target="_blank" class="btn btn-gold"><span>WhatsApp directo</span><span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s contact-bg" id="contacto">
+  <div class="s-in">
+    <div class="slabel r"><span>Contacto</span></div>
+    <h2 class="stitle r d1">Canales<br><em>oficiales.</em></h2>
+
+    <div class="cgrid">
+      <div class="ccol r">
+        <h3 class="ctitle">Encontranos en</h3>
+        <ul class="clist">
+          <li>WhatsApp: +54 9 264 XXX XXXX</li>
+          <li>Instagram: @fernandoquilpatay</li>
+          <li>Facebook: /fernandoquilpatay</li>
+          <li>Email: contacto@dominio.com</li>
+        </ul>
+      </div>
+
+      <div class="ccol r d1">
+        <h3 class="ctitle">Transparencia ante todo</h3>
+        <p class="cp">Información pública, accesible y sin rodeos.</p>
+        <div class="contact-link">
+          <a href="https://wa.me/5492640000000" target="_blank" class="btn btn-gold"><span>Escribir por WhatsApp</span><span class="arr">→</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot">
+    <span class="fcopy">© 2026 · Sitio institucional</span>
+    <span class="fbrand">Fernando Quilpatay</span>
+    <span class="fcopy">HTML · CSS · JS</span>
+  </div>
+</footer>
+
+<div class="modal" id="modal">
+  <div class="mbox">
+    <div class="mhead">
+      <div class="mttl" id="mttl">Documento</div>
+      <div class="mctrl">
+        <a href="#" id="mext" target="_blank" class="mbtn">↗</a>
+        <button class="mbtn" id="mclose">✕</button>
+      </div>
+    </div>
+    <iframe id="mframe" class="mframe" src=""></iframe>
+  </div>
+</div>
+
+<script>
+const C=document.getElementById('c'),CR=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  C.style.left=mx+'px'; C.style.top=my+'px';
+});
+
+(function loop(){
+  rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
+  CR.style.left=rx+'px'; CR.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+document.querySelectorAll('a,button,.doc,.mcard,.stat,.prop-card,.prop-commit').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    C.style.width='16px'; C.style.height='16px';
+    CR.style.width='48px'; CR.style.height='48px'; CR.style.opacity='.28';
+  });
+  el.addEventListener('mouseleave',()=>{
+    C.style.width='8px'; C.style.height='8px';
+    CR.style.width='32px'; CR.style.height='32px'; CR.style.opacity='.45';
+  });
+});
+
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('v');
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+
+document.querySelectorAll('.fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const f=b.dataset.f;
+    document.querySelectorAll('.doc').forEach(d=>{
+      d.classList.toggle('hide',f!=='all'&&d.dataset.cat!==f);
+    });
+  });
+});
+
+const modal=document.getElementById('modal'),
+      frame=document.getElementById('mframe'),
+      ttl=document.getElementById('mttl'),
+      ext=document.getElementById('mext');
+
+document.querySelectorAll('.open-pdf').forEach(b=>{
+  b.addEventListener('click',()=>{
+    ttl.textContent=b.dataset.t;
+    frame.src=b.dataset.p;
+    ext.href=b.dataset.p;
+    modal.classList.add('on');
+    document.body.style.overflow='hidden';
+  });
+});
+
+function closeModal(){
+  modal.classList.remove('on');
+  frame.src='';
+  document.body.style.overflow='';
+}
+document.getElementById('mclose').addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+</script>
+
+</body>
+</html>
