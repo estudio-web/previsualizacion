@@ -451,13 +451,17 @@ footer{background:var(--black);border-top:1px solid var(--lineW);padding:22px cl
 
 @media(max-width:1100px){
   .hero{grid-template-columns:1fr}
-  .hero-img{min-height:52vw}
+
+  .hero-img{
+    min-height:60vw;
+  }
+
   .hero-img-bg{
     background:
-      linear-gradient(to bottom,var(--black),transparent 22%),
-      linear-gradient(to top,var(--black),transparent 22%),
-      url('https://i.ibb.co/S7P3htMv/Gemini-Generated-Image-21nsqq21nsqq21ns.webp') center/cover no-repeat
-  }
+      linear-gradient(to bottom,rgba(8,9,12,.45),transparent 25%),
+      linear-gradient(to top,var(--black),transparent 25%),
+      url('https://i.ibb.co/PZVBXzxL/fernandoquilpatay.webp') center 22% / cover no-repeat}
+
   .mgrid{grid-template-columns:1fr 1fr}
   .docs{grid-template-columns:1fr 1fr}
   .prop-grid{grid-template-columns:1fr 1fr}
