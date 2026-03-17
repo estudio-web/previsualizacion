@@ -86,12 +86,12 @@ nav a:hover::after{transform:scaleX(1)}
 .hero-img-bg{
   position:absolute;inset:0;
   background:
-    linear-gradient(to right,var(--black) 0%,transparent 38%),
+    linear-gradient(to left,var(--black) 0%,transparent 38%),
     linear-gradient(to top,var(--black) 0%,transparent 25%),
     url('https://i.ibb.co/S7P3htMv/Gemini-Generated-Image-21nsqq21nsqq21ns.webp') center/cover no-repeat
 }
 .hero-img::after{
-  content:'';position:absolute;top:0;right:0;bottom:0;width:1px;
+  content:'';position:absolute;top:0;left:0;bottom:0;width:1px;
   background:linear-gradient(to bottom,transparent,var(--gold) 40%,var(--gold) 60%,transparent);z-index:3
 }
 .hero-text{
@@ -146,9 +146,13 @@ nav a:hover::after{transform:scaleX(1)}
   position:absolute;bottom:36px;left:36px;z-index:4;opacity:0;animation:up .8s .95s forwards
 }
 .badge-inner{border-top:2px solid var(--gold);padding-top:14px}
-.badge-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;line-height:1.1; text-shadow:0 3px 5px black;}
+.badge-name{
+  font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;
+  line-height:1.1;text-shadow:0 3px 5px black;
+}
 .badge-role{
-  margin-top:5px;font-size:.72rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:aqua;text-shadow:0 2px 10px black;
+  margin-top:5px;font-size:.72rem;font-weight:500;letter-spacing:.13em;
+  text-transform:uppercase;color:aqua;text-shadow:0 2px 10px black;
 }
 
 /* BUTTONS */
@@ -221,9 +225,9 @@ nav a:hover::after{transform:scaleX(1)}
 .mcard:hover::after{transform:scaleX(1)}
 .mnum{
   font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;
-  color:rgba(201,150,58,.1);line-height:1;margin-bottom:18px;letter-spacing:-.04em;transition:color .3s
+  color:rgba(201,151,58,.822);line-height:1;margin-bottom:18px;letter-spacing:-.04em;transition:color .3s
 }
-.mcard:hover .mnum{color:rgba(201,150,58,.2)}
+.mcard:hover .mnum{color:rgb(211,139,6)}
 .mtitle{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:10px}
 .mtext{font-size:.86rem;font-weight:300;line-height:1.7;color:var(--muted)}
 
@@ -315,8 +319,11 @@ nav a:hover::after{transform:scaleX(1)}
 .prop-card:hover::before{transform:scaleX(1)}
 .prop-card:hover::after{opacity:1}
 .prop-icon{
-  width:44px;height:44px;border:1px solid rgba(201,150,58,.3);display:grid;place-items:center;
-  font-size:1.1rem;margin-bottom:20px;background:rgba(201,150,58,.06);position:relative;z-index:1;
+  width:50px;height:50px;display:flex;align-items:center;justify-content:flex-start;
+  margin-bottom:20px;position:relative;z-index:1;
+}
+.prop-icon img{
+  width:100%;height:100%;object-fit:contain;
 }
 .prop-num{
   font-family:'Playfair Display',serif;font-size:.72rem;font-weight:700;
@@ -404,6 +411,7 @@ footer{background:var(--black);border-top:1px solid var(--lineW);padding:22px cl
   max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
 }
 .fcopy{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(247,243,236,.18)}
+.fcopy2{font-size:.72rem;letter-spacing:.1em;color:rgba(247,243,236,.18)}
 .fbrand{
   font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--gold);
   letter-spacing:.08em;text-transform:uppercase
@@ -444,7 +452,6 @@ footer{background:var(--black);border-top:1px solid var(--lineW);padding:22px cl
 @media(max-width:1100px){
   .hero{grid-template-columns:1fr}
   .hero-img{min-height:52vw}
-  .hero-text{order:-1}
   .hero-img-bg{
     background:
       linear-gradient(to bottom,var(--black),transparent 22%),
@@ -469,7 +476,27 @@ footer{background:var(--black);border-top:1px solid var(--lineW);padding:22px cl
   body{cursor:auto}
   #c,#cr{display:none}
 }
-  #previewModal{
+
+/* Estilos extra para los links de contacto */
+.clist li{padding:0}
+.clist a{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:13px 18px;
+  width:100%;
+  transition:all .24s;
+}
+.contact-icon{
+  width:20px;
+  height:20px;
+  object-fit:contain;
+  opacity:.7;
+  transition:all .24s;
+}
+.clist li:hover .contact-icon{opacity:1}
+
+#previewModal{
 position:fixed;
 inset:0;
 background:rgba(0,0,0,.9);
@@ -550,6 +577,16 @@ font-weight:bold;
 </header>
 
 <section class="hero" id="top">
+  <div class="hero-img">
+    <div class="hero-img-bg"></div>
+    <div class="hero-badge">
+      <div class="badge-inner">
+        <div class="badge-name">Fernando Quilpatay</div>
+        <div class="badge-role">Ex Concejal · Candidato a Intendente</div>
+      </div>
+    </div>
+  </div>
+
   <div class="hero-text">
     <div class="eyebrow"><span>Iglesia · San Juan · 2026</span></div>
     <h1 class="hero-title">
@@ -567,16 +604,6 @@ font-weight:bold;
       <div class="stat"><div class="stat-n">+15</div><span class="stat-l">Proyectos</span></div>
       <div class="stat"><div class="stat-n">PDFs</div><span class="stat-l">Documentos</span></div>
       <div class="stat"><div class="stat-n">24/7</div><span class="stat-l">Disponible</span></div>
-    </div>
-  </div>
-
-  <div class="hero-img">
-    <div class="hero-img-bg"></div>
-    <div class="hero-badge">
-      <div class="badge-inner">
-        <div class="badge-name">Fernando Quilpatay</div>
-        <div class="badge-role">Ex Concejal · Candidato a Intendente</div>
-      </div>
     </div>
   </div>
 </section>
@@ -694,49 +721,48 @@ font-weight:bold;
       </article>
 
       <article class="doc r" data-cat="infraestructura">
-  <div class="doc-idx">06 · Infraestructura</div>
-  <h3 class="doc-title">Construcción de salón municipal en Colangüil</h3>
-  <p class="doc-desc">Espacio comunitario destinado a actividades sociales, culturales y reuniones vecinales para fortalecer la vida institucional de la localidad.</p>
-  <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Colangüil</span></div>
-  <div class="doc-acts">
-    <button class="dpri open-pdf" data-t="Construcción de salón municipal en Colangüil" data-p="docs/proyecto6.pdf"><span>Ver PDF</span></button>
-    <a class="dsec" href="docs/proyecto6.pdf" target="_blank">↗</a>
-  </div>
-</article>
+        <div class="doc-idx">06 · Infraestructura</div>
+        <h3 class="doc-title">Construcción de salón municipal en Colangüil</h3>
+        <p class="doc-desc">Espacio comunitario destinado a actividades sociales, culturales y reuniones vecinales para fortalecer la vida institucional de la localidad.</p>
+        <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Colangüil</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Construcción de salón municipal en Colangüil" data-p="docs/proyecto6.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto6.pdf" target="_blank">↗</a>
+        </div>
+      </article>
 
-<article class="doc r d1" data-cat="infraestructura">
-  <div class="doc-idx">07 · Infraestructura</div>
-  <h3 class="doc-title">Plaza y salón municipal para Pismanta</h3>
-  <p class="doc-desc">Creación de un espacio público y comunitario para actividades sociales, recreativas y turísticas en la localidad de Pismanta.</p>
-  <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Pismanta</span></div>
-  <div class="doc-acts">
-    <button class="dpri open-pdf" data-t="Plaza y salón municipal para Pismanta" data-p="docs/proyecto7.pdf"><span>Ver PDF</span></button>
-    <a class="dsec" href="docs/proyecto7.pdf" target="_blank">↗</a>
-  </div>
-</article>
+      <article class="doc r d1" data-cat="infraestructura">
+        <div class="doc-idx">07 · Infraestructura</div>
+        <h3 class="doc-title">Plaza y salón municipal para Pismanta</h3>
+        <p class="doc-desc">Creación de un espacio público y comunitario para actividades sociales, recreativas y turísticas en la localidad de Pismanta.</p>
+        <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Pismanta</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Plaza y salón municipal para Pismanta" data-p="docs/proyecto7.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto7.pdf" target="_blank">↗</a>
+        </div>
+      </article>
 
-<article class="doc r d2" data-cat="infraestructura">
-  <div class="doc-idx">08 · Infraestructura</div>
-  <h3 class="doc-title">Construcción de salón municipal en Malimán</h3>
-  <p class="doc-desc">Proyecto para la creación de un espacio comunitario que permita desarrollar actividades culturales, sociales y vecinales en la localidad.</p>
-  <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Malimán</span></div>
-  <div class="doc-acts">
-    <button class="dpri open-pdf" data-t="Construcción de salón municipal en Malimán" data-p="docs/proyecto8.pdf"><span>Ver PDF</span></button>
-    <a class="dsec" href="docs/proyecto8.pdf" target="_blank">↗</a>
-  </div>
-</article>
+      <article class="doc r d2" data-cat="infraestructura">
+        <div class="doc-idx">08 · Infraestructura</div>
+        <h3 class="doc-title">Construcción de salón municipal en Malimán</h3>
+        <p class="doc-desc">Proyecto para la creación de un espacio comunitario que permita desarrollar actividades culturales, sociales y vecinales en la localidad.</p>
+        <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Malimán</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Construcción de salón municipal en Malimán" data-p="docs/proyecto8.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto8.pdf" target="_blank">↗</a>
+        </div>
+      </article>
 
-<article class="doc r" data-cat="infraestructura">
-  <div class="doc-idx">09 · Protección</div>
-  <h3 class="doc-title">Construcción de gaviones y defensas contra crecidas</h3>
-  <p class="doc-desc">Proyecto para la instalación de defensas y gaviones en distintos sectores del departamento con el objetivo de prevenir daños por crecidas y fenómenos climáticos.</p>
-  <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Prevención</span></div>
-  <div class="doc-acts">
-    <button class="dpri open-pdf" data-t="Construcción de gaviones y defensas contra crecidas" data-p="docs/proyecto9.pdf"><span>Ver PDF</span></button>
-    <a class="dsec" href="docs/proyecto9.pdf" target="_blank">↗</a>
-  </div>
-</article>
-      
+      <article class="doc r" data-cat="infraestructura">
+        <div class="doc-idx">09 · Protección</div>
+        <h3 class="doc-title">Construcción de gaviones y defensas contra crecidas</h3>
+        <p class="doc-desc">Proyecto para la instalación de defensas y gaviones en distintos sectores del departamento con el objetivo de prevenir daños por crecidas y fenómenos climáticos.</p>
+        <div class="doc-tags"><span class="dtag">Infraestructura</span><span class="dtag">Prevención</span></div>
+        <div class="doc-acts">
+          <button class="dpri open-pdf" data-t="Construcción de gaviones y defensas contra crecidas" data-p="docs/proyecto9.pdf"><span>Ver PDF</span></button>
+          <a class="dsec" href="docs/proyecto9.pdf" target="_blank">↗</a>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -745,49 +771,59 @@ font-weight:bold;
   <div class="s-in">
     <div class="slabel r"><span>Si soy intendente</span></div>
     <h2 class="stitle r d1">Compromisos para el<br><em>Departamento Iglesia.</em></h2>
-    <p class="prop-intro r d2">No son promesas vacías. Son compromisos concretos, con nombre y lugar, para los que vivimos acá.</p>
+    <p class="prop-intro r d2">No son promesas vacías. Son compromisos concretos, con nombre y lugar.</p>
 
     <div class="prop-grid">
       <div class="prop-card r d1">
-        <div class="prop-icon">💧</div>
+        <div class="prop-icon">
+          <img src="images/agua-100.png" alt="Agua">
+        </div>
         <div class="prop-num">01 · Infraestructura</div>
         <h3 class="prop-title">Agua potable en todas las localidades</h3>
-        <p class="prop-text">Extensión de redes de agua potable y cloacas en Villa Iglesia, Las Flores y parajes rurales. Ningún vecino sin acceso básico.</p>
+        <p class="prop-text">Extensión de redes en Villa Iglesia, Las Flores y parajes rurales. Ningún vecino sin acceso básico.</p>
       </div>
 
       <div class="prop-card r d2">
-        <div class="prop-icon">🛣️</div>
+        <div class="prop-icon">
+          <img src="images/camino-100.png" alt="Ruta">
+        </div>
         <div class="prop-num">02 · Conectividad</div>
         <h3 class="prop-title">Rutas y accesos pavimentados</h3>
-        <p class="prop-text">Plan de pavimentación progresivo para los caminos que conectan las localidades del departamento. Prioridad en accesos a zonas productivas y educativas.</p>
+        <p class="prop-text">Plan de pavimentación progresivo para los caminos que conectan las localidades del departamento.</p>
       </div>
 
       <div class="prop-card r d3">
-        <div class="prop-icon">🏥</div>
+        <div class="prop-icon">
+          <img src="images/clínica-100.png" alt="Salud">
+        </div>
         <div class="prop-num">03 · Salud</div>
         <h3 class="prop-title">Centro de salud con especialidades</h3>
-        <p class="prop-text">Ampliación del servicio de salud local con especialidades básicas y guardia permanente. Que nadie tenga que viajar a San Juan para una consulta urgente.</p>
+        <p class="prop-text">Ampliación del servicio local con guardia permanente. Que nadie tenga que viajar por una urgencia.</p>
       </div>
 
       <div class="prop-card r d1">
-  <div class="prop-icon">🏭</div>
-  <div class="prop-num">04 · Producción local</div>
-  <h3 class="prop-title">Impulso a la producción local y nuevas fábricas</h3>
-  <p class="prop-text">Promover la instalación de fábricas y el desarrollo de productos locales para fortalecer la economía del departamento, reactivar la producción y generar oportunidades a partir de lo que Iglesia produce y ofrece al turismo.</p>
-</div>
+        <div class="prop-icon">
+          <img src="images/fábrica-100.png" alt="Producción">
+        </div>
+        <div class="prop-num">04 · Producción local</div>
+        <h3 class="prop-title">Impulso a la producción y nuevas fábricas</h3>
+        <p class="prop-text">Promover la instalación de fábricas y desarrollo de productos locales para fortalecer la economía.</p>
+      </div>
 
-<div class="prop-card r d2">
-  <div class="prop-icon">🤝</div>
-  <div class="prop-num">05 · Trabajo y emprendimientos</div>
-  <h3 class="prop-title">Más apoyo a emprendedores y generación de empleo</h3>
-  <p class="prop-text">Acompañar a empresas, comercios y emprendimientos locales para que puedan crecer, invertir y generar nuevos puestos de trabajo, ampliando las oportunidades laborales más allá de la minería y la municipalidad.</p>
-</div>
+      <div class="prop-card r d2">
+        <div class="prop-icon">
+          <img src="images/donación-100.png" alt="Trabajo">
+        </div>
+        <div class="prop-num">05 · Trabajo y emprendimientos</div>
+        <h3 class="prop-title">Más apoyo a emprendedores</h3>
+        <p class="prop-text">Acompañar a empresas y comercios para generar nuevos puestos de trabajo genuinos.</p>
+      </div>
 
       <div class="prop-featured r">
         <div>
           <div class="prop-featured-label">Compromiso central</div>
           <h3 class="prop-featured-title">Un municipio<br>presente en<br><em>cada rincón.</em></h3>
-          <p class="prop-featured-text">La intendencia no es solo una oficina en Rodeo. Es presencia real en cada Localidad, cada escuela, cada vecino que necesita una respuesta.</p>
+          <p class="prop-featured-text">La intendencia no es solo una oficina en Rodeo. Es presencia real en cada localidad, cada escuela, cada vecino que necesita una respuesta.</p>
         </div>
 
         <div class="prop-featured-right">
@@ -805,8 +841,7 @@ font-weight:bold;
           </div>
           <div class="prop-commit">
             <div class="prop-commit-dot"></div>
-            <div class="prop-commit-text"><strong>Minería con beneficio local</strong>
-Promover que la actividad minera contribuya al crecimiento económico y al desarrollo del departamento.</div>
+            <div class="prop-commit-text"><strong>Minería con beneficio local</strong>Promover que la actividad minera contribuya al crecimiento económico y al desarrollo del departamento.</div>
           </div>
         </div>
       </div>
@@ -835,20 +870,40 @@ Promover que la actividad minera contribuya al crecimiento económico y al desar
 
     <div class="cgrid">
       <div class="ccol r">
-        <h3 class="ctitle">Encontranos en</h3>
+        <h3 class="ctitle">Encontrame en</h3>
         <ul class="clist">
-          <li>WhatsApp: +54 9 264 529 1748</li>
-          <li>Instagram: @fernandoquilpatay</li>
-          <li>Facebook: /fernando.quilpatay</li>
-          <li>Email: contactofq@gmail.com</li>
+          <li class="r d1">
+            <a href="https://wa.me/5492645291748" target="_blank">
+              <img src="images/whatsapp-64.png" class="contact-icon" alt="WhatsApp">
+              <span>+54 9 264 529 1748</span>
+            </a>
+          </li>
+          <li class="r d2">
+            <a href="https://instagram.com/fernando_quilpatay_" target="_blank">
+              <img src="images/instagram-96.png" class="contact-icon" alt="Instagram">
+              <span>@fernando_quilpatay_</span>
+            </a>
+          </li>
+          <li class="r d3">
+            <a href="https://facebook.com/fernando.quilpatay" target="_blank">
+              <img src="images/facebook-96.png" class="contact-icon" alt="Facebook">
+              <span>/fernando.quilpatay</span>
+            </a>
+          </li>
+          <li class="r">
+            <a href="mailto:contactofq@gmail.com">
+              <img src="images/gmail-96.png" class="contact-icon" alt="Email">
+              <span>fernandoquilpatay9@gmail.com</span>
+            </a>
+          </li>
         </ul>
       </div>
 
-      <div class="ccol r d1">
-        <h3 class="ctitle">Transparencia ante todo</h3>
-        <p class="cp">Información pública, accesible y sin rodeos.</p>
+      <div class="ccol r d2">
+        <h3 class="ctitle">Atención Directa</h3>
+        <p class="cp">Estamos a disposición para escuchar tus proyectos e inquietudes para el departamento. La participación ciudadana es la base de nuestra gestión.</p>
         <div class="contact-link">
-          <a href="https://wa.me/5492645291748" target="_blank" class="btn btn-gold"><span>Escribir por WhatsApp</span><span class="arr">→</span></a>
+          <a href="https://wa.me/5492645291748" target="_blank" class="btn btn-gold"><span>Enviar mensaje</span><span class="arr">→</span></a>
         </div>
       </div>
     </div>
@@ -859,7 +914,9 @@ Promover que la actividad minera contribuya al crecimiento económico y al desar
   <div class="foot">
     <span class="fcopy">© 2026 · Sitio institucional</span>
     <span class="fbrand">Fernando Quilpatay</span>
-    <span class="fcopy">IGW - SERVICIOS IGLESIA.</span>
+    <a href="https://wa.me/5492646246834?text=Hola%20me%20interesaria%20charlar%20por%20una%20pagina%20web" target="_blank" class="fcopy2">
+      Diseño web por <strong style="color: rgba(0, 255, 255, 0.612);">IGW SERVICIOS · IGLESIA</strong>
+    </a>
   </div>
 </footer>
 
@@ -881,24 +938,34 @@ const C=document.getElementById('c'),CR=document.getElementById('cr');
 let mx=0,my=0,rx=0,ry=0;
 
 document.addEventListener('mousemove',e=>{
-  mx=e.clientX; my=e.clientY;
-  C.style.left=mx+'px'; C.style.top=my+'px';
+  mx=e.clientX;
+  my=e.clientY;
+  C.style.left=mx+'px';
+  C.style.top=my+'px';
 });
 
 (function loop(){
-  rx+=(mx-rx)*.13; ry+=(my-ry)*.13;
-  CR.style.left=rx+'px'; CR.style.top=ry+'px';
+  rx+=(mx-rx)*.13;
+  ry+=(my-ry)*.13;
+  CR.style.left=rx+'px';
+  CR.style.top=ry+'px';
   requestAnimationFrame(loop);
 })();
 
 document.querySelectorAll('a,button,.doc,.mcard,.stat,.prop-card,.prop-commit').forEach(el=>{
   el.addEventListener('mouseenter',()=>{
-    C.style.width='16px'; C.style.height='16px';
-    CR.style.width='48px'; CR.style.height='48px'; CR.style.opacity='.28';
+    C.style.width='16px';
+    C.style.height='16px';
+    CR.style.width='48px';
+    CR.style.height='48px';
+    CR.style.opacity='.28';
   });
   el.addEventListener('mouseleave',()=>{
-    C.style.width='8px'; C.style.height='8px';
-    CR.style.width='32px'; CR.style.height='32px'; CR.style.opacity='.45';
+    C.style.width='8px';
+    C.style.height='8px';
+    CR.style.width='32px';
+    CR.style.height='32px';
+    CR.style.opacity='.45';
   });
 });
 
@@ -910,6 +977,7 @@ const obs=new IntersectionObserver(es=>{
     }
   });
 },{threshold:.1});
+
 document.querySelectorAll('.r').forEach(el=>obs.observe(el));
 
 document.querySelectorAll('.fb').forEach(b=>{
@@ -918,7 +986,7 @@ document.querySelectorAll('.fb').forEach(b=>{
     b.classList.add('on');
     const f=b.dataset.f;
     document.querySelectorAll('.doc').forEach(d=>{
-      d.classList.toggle('hide',f!=='all'&&d.dataset.cat!==f);
+      d.classList.toggle('hide',f!=='all' && d.dataset.cat!==f);
     });
   });
 });
@@ -947,6 +1015,7 @@ document.getElementById('mclose').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
+
 <script>
 
 const expiracion = new Date("2026-03-17T19:00:00");
@@ -990,5 +1059,6 @@ document.getElementById("previewModal").style.display="none";
 }
 
 </script>
+
 </body>
 </html>
