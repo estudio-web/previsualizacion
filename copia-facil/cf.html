@@ -311,6 +311,9 @@ textarea{
   <div class="grid two" style="margin-top:10px;">
     <button class="primary" onclick="copyPrompt()">Copiar prompt</button>
     <button class="gray" onclick="generatePrompt()">Actualizar prompt</button>
+    <button onclick="openChatGPTWithPrompt()">
+  Abrir en ChatGPT
+</button>
   </div>
 </section>
 
@@ -819,6 +822,32 @@ function clamp(v){
 function setStatus(msg){
   statusBox.textContent = msg;
 }
+
+function openChatGPTWithPrompt(){
+
+  const prompt = `
+Convertí esta foto de una copia escolar en una versión limpia, vacía y lista para imprimir.
+
+IMPORTANTE:
+- Eliminá respuestas escritas con lápiz.
+- Quitá tachaduras y marcas.
+- Conservá solo la estructura original.
+- No completes ejercicios.
+- Fondo blanco puro.
+- Líneas negras claras.
+- Lista para colorear o completar.
+
+Imagen de referencia:
+https://tu-enlace-de-imagen.com/imagen.png
+`;
+
+  const url =
+    "https://chatgpt.com/?q=" +
+    encodeURIComponent(prompt);
+
+  window.open(url, "_blank");
+}
+
 
 updateLabels();
 generatePrompt();
