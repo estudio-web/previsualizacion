@@ -1,568 +1,827 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Copia Clara</title>
-  <style>
-    :root{
-      --bg:#f4f6f8;
-      --card:#ffffff;
-      --text:#151515;
-      --muted:#666;
-      --primary:#ff7a00;
-      --dark:#111;
-      --border:#ddd;
-      --ok:#16a34a;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copia Clara PRO</title>
 
-    *{box-sizing:border-box}
+<script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady()"></script>
 
-    body{
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-    }
+<style>
+:root{
+  --bg:#f3f5f8;
+  --card:#fff;
+  --text:#121212;
+  --muted:#6b7280;
+  --primary:#ff7a00;
+  --dark:#101114;
+  --green:#16a34a;
+  --border:#e5e7eb;
+}
 
-    header{
-      background:var(--dark);
-      color:white;
-      padding:18px 14px;
-      text-align:center;
-    }
+*{box-sizing:border-box}
 
-    header h1{
-      margin:0;
-      font-size:26px;
-      letter-spacing:.5px;
-    }
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(180deg,#ffffff,#f3f5f8);
+  color:var(--text);
+}
 
-    header p{
-      margin:6px 0 0;
-      font-size:14px;
-      color:#ddd;
-    }
+header{
+  background:#101114;
+  color:white;
+  padding:22px 16px;
+  text-align:center;
+}
 
-    main{
-      max-width:900px;
-      margin:auto;
-      padding:16px;
-    }
+header h1{
+  margin:0;
+  font-size:28px;
+}
 
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:16px;
-      margin-bottom:16px;
-      box-shadow:0 8px 24px rgba(0,0,0,.06);
-    }
+header p{
+  margin:8px 0 0;
+  color:#d1d5db;
+  font-size:14px;
+}
 
-    h2{
-      margin:0 0 12px;
-      font-size:19px;
-    }
+main{
+  max-width:980px;
+  margin:auto;
+  padding:16px;
+}
 
-    .btns{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-    }
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.07);
+}
 
-    button, label.upload{
-      border:0;
-      border-radius:14px;
-      padding:14px;
-      font-weight:700;
-      font-size:15px;
-      cursor:pointer;
-      text-align:center;
-      background:var(--dark);
-      color:white;
-      display:block;
-    }
+h2{
+  margin:0 0 12px;
+  font-size:19px;
+}
 
-    button.primary, label.upload{
-      background:var(--primary);
-      color:white;
-    }
+.grid{
+  display:grid;
+  gap:10px;
+}
 
-    button.secondary{
-      background:#ececec;
-      color:#111;
-    }
+@media(min-width:720px){
+  .grid.two{grid-template-columns:1fr 1fr}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+}
 
-    button.ok{
-      background:var(--ok);
-    }
+button,label.upload{
+  border:none;
+  border-radius:15px;
+  padding:14px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  text-align:center;
+  background:#111;
+  color:white;
+}
 
-    input[type="file"]{
-      display:none;
-    }
+button.primary,label.upload{
+  background:var(--primary);
+}
 
-    canvas{
-      width:100%;
-      max-height:70vh;
-      object-fit:contain;
-      background:white;
-      border:1px solid #ccc;
-      border-radius:14px;
-      display:none;
-    }
+button.gray{
+  background:#e5e7eb;
+  color:#111;
+}
 
-    .controls{
-      display:grid;
-      gap:12px;
-      margin-top:12px;
-    }
+button.green{
+  background:var(--green);
+}
 
-    .control label{
-      display:flex;
-      justify-content:space-between;
-      font-size:14px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
 
-    input[type="range"]{
-      width:100%;
-    }
+input[type=file]{
+  display:none;
+}
 
-    textarea{
-      width:100%;
-      min-height:180px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid #ccc;
-      resize:vertical;
-      font-size:14px;
-      line-height:1.45;
-    }
+.previewWrap{
+  background:#eef0f3;
+  border-radius:18px;
+  padding:10px;
+  border:1px dashed #c8ccd2;
+  overflow:hidden;
+}
 
-    .result{
-      word-break:break-all;
-      background:#f2f2f2;
-      border-radius:12px;
-      padding:10px;
-      font-size:14px;
-      display:none;
-    }
+canvas{
+  width:100%;
+  max-height:75vh;
+  object-fit:contain;
+  background:white;
+  border-radius:14px;
+  display:none;
+}
 
-    .status{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:14px;
-    }
+.controls{
+  display:grid;
+  gap:12px;
+  margin-top:14px;
+}
 
-    .small{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.4;
-    }
+.control{
+  background:#f8f8f8;
+  border:1px solid #eee;
+  border-radius:16px;
+  padding:12px;
+}
 
-    @media(min-width:700px){
-      .btns{
-        grid-template-columns:repeat(2,1fr);
-      }
-    }
-  </style>
+.control label{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  font-weight:700;
+  color:#444;
+  margin-bottom:8px;
+}
+
+input[type=range],select{
+  width:100%;
+}
+
+input[type=range]{
+  accent-color:var(--primary);
+}
+
+select,textarea,input[type=text]{
+  width:100%;
+  border:1px solid #d1d5db;
+  border-radius:14px;
+  padding:13px;
+  font-size:14px;
+}
+
+textarea{
+  min-height:240px;
+  resize:vertical;
+  line-height:1.45;
+}
+
+.status{
+  font-size:14px;
+  color:var(--muted);
+  margin-top:10px;
+}
+
+.result{
+  display:none;
+  padding:12px;
+  background:#f3f4f6;
+  border-radius:14px;
+  word-break:break-all;
+  font-size:14px;
+  margin-top:10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#fff3e6;
+  color:#b45309;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+</style>
 </head>
+
 <body>
 
 <header>
-  <h1>Copia Clara</h1>
-  <p>Limpiá fotos de tareas escolares y generá una versión lista para imprimir.</p>
+  <h1>Copia Clara PRO</h1>
+  <p>Escaneá, limpiá y prepará copias escolares para imprimir o mejorar con IA.</p>
 </header>
 
 <main>
 
-  <section class="card">
-    <h2>1. Cargar o tomar foto</h2>
+<section class="card">
+  <span class="badge">Paso 1</span>
+  <h2>Cargar imagen</h2>
 
-    <div class="btns">
-      <label class="upload">
-        Tomar foto / Subir imagen
-        <input id="fileInput" type="file" accept="image/*" capture="environment">
-      </label>
+  <div class="grid two">
+    <label class="upload">
+      Elegir desde galería
+      <input id="galleryInput" type="file" accept="image/*">
+    </label>
 
-      <button class="secondary" onclick="resetAll()">Limpiar todo</button>
-    </div>
+    <label class="upload">
+      Tomar foto
+      <input id="cameraInput" type="file" accept="image/*" capture="environment">
+    </label>
+  </div>
 
-    <p class="small">
-      Permití el acceso a cámara si querés sacar la foto directamente. También podés elegir una imagen de la galería.
-    </p>
-  </section>
+  <p class="small">
+    Para mejores resultados: sacá la foto de frente, con buena luz, y que la hoja ocupe casi toda la imagen.
+  </p>
+</section>
 
-  <section class="card">
-    <h2>2. Vista previa</h2>
+<section class="card">
+  <span class="badge">Paso 2</span>
+  <h2>Vista previa</h2>
+
+  <div class="previewWrap">
     <canvas id="canvas"></canvas>
+  </div>
 
-    <div class="controls">
-      <div class="control">
-        <label>Brillo <span id="brightnessVal">12</span></label>
-        <input id="brightness" type="range" min="-80" max="100" value="12">
-      </div>
+  <div class="grid two" style="margin-top:12px;">
+    <button class="primary" onclick="detectAndCropPaper()">Detectar hoja</button>
+    <button onclick="autoClean()">Limpieza automática</button>
+    <button class="gray" onclick="restoreOriginal()">Volver a original</button>
+    <button class="green" onclick="downloadImage()">Descargar imagen</button>
+  </div>
 
-      <div class="control">
-        <label>Contraste <span id="contrastVal">45</span></label>
-        <input id="contrast" type="range" min="-50" max="120" value="45">
-      </div>
-
-      <div class="control">
-        <label>Limpieza de fondo <span id="thresholdVal">190</span></label>
-        <input id="threshold" type="range" min="120" max="245" value="190">
-      </div>
+  <div class="controls">
+    <div class="control">
+      <label>Brillo <span id="brightnessVal">12</span>%</label>
+      <input id="brightness" type="range" min="-80" max="100" value="12">
     </div>
 
-    <div class="btns" style="margin-top:14px;">
-      <button class="primary" onclick="applyScanner()">Limpiar copia</button>
-      <button onclick="applyBlackWhite()">Blanco y negro fuerte</button>
-      <button class="secondary" onclick="restoreOriginal()">Volver a original</button>
-      <button class="ok" onclick="downloadImage()">Descargar imagen</button>
+    <div class="control">
+      <label>Contraste <span id="contrastVal">45</span>%</label>
+      <input id="contrast" type="range" min="-50" max="130" value="45">
     </div>
 
-    <div id="status" class="status"></div>
-  </section>
-
-  <section class="card">
-    <h2>3. Generar enlace</h2>
-
-    <button class="primary" onclick="uploadImage()">Generar enlace de imagen</button>
-
-    <div id="linkBox" class="result"></div>
-
-    <div class="btns" style="margin-top:10px;">
-      <button class="secondary" onclick="copyLink()">Copiar enlace</button>
+    <div class="control">
+      <label>Sombras / fondo blanco <span id="shadowVal">35</span>%</label>
+      <input id="shadow" type="range" min="0" max="100" value="35">
     </div>
 
-    <p class="small">
-      Este enlace sirve para compartir la copia o usarla como referencia al pedir una versión mejorada.
-    </p>
-  </section>
-
-  <section class="card">
-    <h2>4. Prompt para pedir la imagen final</h2>
-
-    <select id="promptMode" onchange="generatePrompt()" style="width:100%;padding:13px;border-radius:12px;border:1px solid #ccc;margin-bottom:10px;">
-      <option value="limpiar">Solo limpiar copia</option>
-      <option value="colorear">Dejar para colorear</option>
-      <option value="reestructurar">Rehacer prolija manteniendo estructura</option>
-      <option value="color">Versión color suave</option>
-    </select>
-
-    <textarea id="promptText"></textarea>
-
-    <div class="btns" style="margin-top:10px;">
-      <button class="primary" onclick="copyPrompt()">Copiar prompt</button>
+    <div class="control">
+      <label>Nitidez <span id="sharpVal">25</span>%</label>
+      <input id="sharp" type="range" min="0" max="100" value="25">
     </div>
-  </section>
+
+    <div class="control">
+      <label>Blanco y negro <span id="bwVal">40</span>%</label>
+      <input id="bw" type="range" min="0" max="100" value="40">
+    </div>
+  </div>
+
+  <div id="status" class="status">Esperando imagen...</div>
+</section>
+
+<section class="card">
+  <span class="badge">Paso 3</span>
+  <h2>Generar enlace</h2>
+
+  <button class="primary" onclick="uploadImage()">Generar enlace de imagen</button>
+  <div id="linkBox" class="result"></div>
+
+  <div class="grid two" style="margin-top:10px;">
+    <button class="gray" onclick="copyLink()">Copiar enlace</button>
+  </div>
+</section>
+
+<section class="card">
+  <span class="badge">Paso 4</span>
+  <h2>Prompt inteligente</h2>
+
+  <select id="promptMode" onchange="generatePrompt()">
+    <option value="colorear">Dejar lista para colorear</option>
+    <option value="limpiar">Solo limpiar y mejorar</option>
+    <option value="recrear">Recrear prolija manteniendo todo</option>
+    <option value="texto">Mejorar lectura de texto</option>
+    <option value="color">Versión color suave</option>
+  </select>
+
+  <textarea id="promptText"></textarea>
+
+  <div class="grid two" style="margin-top:10px;">
+    <button class="primary" onclick="copyPrompt()">Copiar prompt</button>
+    <button class="gray" onclick="generatePrompt()">Actualizar prompt</button>
+  </div>
+</section>
 
 </main>
 
 <script>
-  const API_KEY = "9ed686117bdb0d5263132a2e5ec5b094";
+const API_KEY = "TU_API_KEY_AQUI";
 
-  const fileInput = document.getElementById("fileInput");
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d", { willReadFrequently:true });
+let cvReady = false;
+let originalImage = null;
+let baseImageData = null;
+let generatedLink = "";
 
-  const brightness = document.getElementById("brightness");
-  const contrast = document.getElementById("contrast");
-  const threshold = document.getElementById("threshold");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d", { willReadFrequently:true });
 
-  const brightnessVal = document.getElementById("brightnessVal");
-  const contrastVal = document.getElementById("contrastVal");
-  const thresholdVal = document.getElementById("thresholdVal");
+const galleryInput = document.getElementById("galleryInput");
+const cameraInput = document.getElementById("cameraInput");
 
-  const statusBox = document.getElementById("status");
-  const linkBox = document.getElementById("linkBox");
-  const promptText = document.getElementById("promptText");
-  const promptMode = document.getElementById("promptMode");
+const brightness = document.getElementById("brightness");
+const contrast = document.getElementById("contrast");
+const shadow = document.getElementById("shadow");
+const sharp = document.getElementById("sharp");
+const bw = document.getElementById("bw");
 
-  let originalImage = null;
-  let generatedLink = "";
+const brightnessVal = document.getElementById("brightnessVal");
+const contrastVal = document.getElementById("contrastVal");
+const shadowVal = document.getElementById("shadowVal");
+const sharpVal = document.getElementById("sharpVal");
+const bwVal = document.getElementById("bwVal");
 
-  fileInput.addEventListener("change", e => {
-    const file = e.target.files[0];
-    if (!file) return;
+const statusBox = document.getElementById("status");
+const linkBox = document.getElementById("linkBox");
+const promptText = document.getElementById("promptText");
+const promptMode = document.getElementById("promptMode");
 
-    const reader = new FileReader();
+function onOpenCvReady(){
+  cv["onRuntimeInitialized"] = () => {
+    cvReady = true;
+    setStatus("Sistema listo. Podés cargar una imagen.");
+  };
+}
 
-    reader.onload = ev => {
-      const img = new Image();
-      img.onload = () => {
-        originalImage = img;
+galleryInput.addEventListener("change", e => loadFile(e.target.files[0]));
+cameraInput.addEventListener("change", e => loadFile(e.target.files[0]));
 
-        const maxWidth = 1600;
-        const scale = Math.min(1, maxWidth / img.width);
+[brightness, contrast, shadow, sharp, bw].forEach(input=>{
+  input.addEventListener("input", ()=>{
+    updateLabels();
+    applyLiveEffects();
+  });
+});
 
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
+function updateLabels(){
+  brightnessVal.textContent = brightness.value;
+  contrastVal.textContent = contrast.value;
+  shadowVal.textContent = shadow.value;
+  sharpVal.textContent = sharp.value;
+  bwVal.textContent = bw.value;
+}
 
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.style.display = "block";
+function loadFile(file){
+  if(!file) return;
 
-        setStatus("Imagen cargada correctamente.");
-        generatePrompt();
-      };
+  const reader = new FileReader();
 
-      img.src = ev.target.result;
+  reader.onload = ev => {
+    const img = new Image();
+
+    img.onload = () => {
+      originalImage = img;
+
+      const maxW = 1800;
+      const scale = Math.min(1, maxW / img.width);
+
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      canvas.style.display = "block";
+
+      baseImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+
+      setStatus("Imagen cargada. Podés detectar la hoja o ajustar la limpieza.");
+      generatedLink = "";
+      linkBox.style.display = "none";
+      generatePrompt();
+      applyLiveEffects();
     };
 
-    reader.readAsDataURL(file);
-  });
+    img.src = ev.target.result;
+  };
 
-  [brightness, contrast, threshold].forEach(input => {
-    input.addEventListener("input", () => {
-      brightnessVal.textContent = brightness.value;
-      contrastVal.textContent = contrast.value;
-      thresholdVal.textContent = threshold.value;
-    });
-  });
+  reader.readAsDataURL(file);
+}
 
-  function restoreOriginal(){
-    if (!originalImage) {
-      setStatus("Primero cargá una imagen.");
-      return;
-    }
+function restoreOriginal(){
+  if(!originalImage) return setStatus("Primero cargá una imagen.");
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
-    setStatus("Imagen original restaurada.");
-  }
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(originalImage,0,0,canvas.width,canvas.height);
+  baseImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+  applyLiveEffects();
+  setStatus("Imagen original restaurada.");
+}
 
-  function applyScanner(){
-    if (!originalImage) {
-      setStatus("Primero cargá una imagen.");
-      return;
-    }
+function detectAndCropPaper(){
+  if(!cvReady) return setStatus("El detector todavía está cargando. Esperá unos segundos.");
+  if(!originalImage) return setStatus("Primero cargá una imagen.");
 
-    restoreOriginal();
+  try{
+    let src = cv.imread(canvas);
+    let gray = new cv.Mat();
+    let blur = new cv.Mat();
+    let edges = new cv.Mat();
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
 
-    const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
-    const data = imgData.data;
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+    cv.GaussianBlur(gray, blur, new cv.Size(5,5), 0);
+    cv.Canny(blur, edges, 50, 150);
 
-    const b = parseInt(brightness.value);
-    const c = parseInt(contrast.value);
-    const t = parseInt(threshold.value);
+    cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
 
-    const factor = (259 * (c + 255)) / (255 * (259 - c));
+    let best = null;
+    let bestArea = 0;
 
-    for(let i=0; i<data.length; i+=4){
-      let r = data[i];
-      let g = data[i+1];
-      let bl = data[i+2];
+    for(let i=0;i<contours.size();i++){
+      let cnt = contours.get(i);
+      let peri = cv.arcLength(cnt,true);
+      let approx = new cv.Mat();
 
-      let gray = 0.299*r + 0.587*g + 0.114*bl;
+      cv.approxPolyDP(cnt, approx, 0.02 * peri, true);
 
-      gray = factor * (gray - 128) + 128;
-      gray = gray + b;
+      let area = cv.contourArea(approx);
 
-      if(gray > t){
-        gray = 255;
-      } else if(gray < 90){
-        gray = 0;
+      if(approx.rows === 4 && area > bestArea){
+        bestArea = area;
+        best = approx;
+      }else{
+        approx.delete();
       }
 
-      gray = Math.max(0, Math.min(255, gray));
-
-      data[i] = gray;
-      data[i+1] = gray;
-      data[i+2] = gray;
+      cnt.delete();
     }
 
-    ctx.putImageData(imgData,0,0);
-    sharpen();
-    setStatus("Copia limpiada. Podés ajustar los controles y volver a limpiar.");
+    if(!best || bestArea < canvas.width * canvas.height * 0.15){
+      src.delete(); gray.delete(); blur.delete(); edges.delete(); contours.delete(); hierarchy.delete();
+      if(best) best.delete();
+      return setStatus("No pude detectar la hoja con seguridad. Probá una foto más de frente y con mejor contraste.");
+    }
+
+    let points = [];
+    for(let i=0;i<4;i++){
+      points.push({
+        x:best.intPtr(i,0)[0],
+        y:best.intPtr(i,0)[1]
+      });
+    }
+
+    points = orderPoints(points);
+
+    const widthTop = distance(points[0], points[1]);
+    const widthBottom = distance(points[3], points[2]);
+    const heightLeft = distance(points[0], points[3]);
+    const heightRight = distance(points[1], points[2]);
+
+    const dstW = Math.max(widthTop,widthBottom);
+    const dstH = Math.max(heightLeft,heightRight);
+
+    let srcTri = cv.matFromArray(4,1,cv.CV_32FC2,[
+      points[0].x,points[0].y,
+      points[1].x,points[1].y,
+      points[2].x,points[2].y,
+      points[3].x,points[3].y
+    ]);
+
+    let dstTri = cv.matFromArray(4,1,cv.CV_32FC2,[
+      0,0,
+      dstW,0,
+      dstW,dstH,
+      0,dstH
+    ]);
+
+    let M = cv.getPerspectiveTransform(srcTri,dstTri);
+    let dst = new cv.Mat();
+
+    cv.warpPerspective(src,dst,M,new cv.Size(dstW,dstH),cv.INTER_LINEAR,cv.BORDER_CONSTANT,new cv.Scalar());
+
+    canvas.width = dstW;
+    canvas.height = dstH;
+
+    cv.imshow(canvas,dst);
+
+    baseImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+    applyLiveEffects();
+
+    src.delete(); gray.delete(); blur.delete(); edges.delete(); contours.delete(); hierarchy.delete();
+    best.delete(); srcTri.delete(); dstTri.delete(); M.delete(); dst.delete();
+
+    setStatus("Hoja detectada y recortada correctamente.");
+
+  }catch(err){
+    console.error(err);
+    setStatus("Hubo un error detectando la hoja. Probá con otra foto.");
+  }
+}
+
+function orderPoints(pts){
+  pts.sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+  const tl = pts[0];
+  const br = pts[3];
+
+  const middle = [pts[1],pts[2]];
+  middle.sort((a,b)=>(a.y-a.x)-(b.y-b.x));
+
+  const tr = middle[0];
+  const bl = middle[1];
+
+  return [tl,tr,br,bl];
+}
+
+function distance(a,b){
+  return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2);
+}
+
+function applyLiveEffects(){
+  if(!baseImageData) return;
+
+  const src = new ImageData(
+    new Uint8ClampedArray(baseImageData.data),
+    baseImageData.width,
+    baseImageData.height
+  );
+
+  let data = src.data;
+
+  const b = parseInt(brightness.value);
+  const c = parseInt(contrast.value);
+  const s = parseInt(shadow.value);
+  const bwLevel = parseInt(bw.value);
+
+  const factor = (259 * (c + 255)) / (255 * (259 - c));
+
+  for(let i=0;i<data.length;i+=4){
+    let r = data[i];
+    let g = data[i+1];
+    let bl = data[i+2];
+
+    let gray = 0.299*r + 0.587*g + 0.114*bl;
+
+    r = factor * (r - 128) + 128 + b;
+    g = factor * (g - 128) + 128 + b;
+    bl = factor * (bl - 128) + 128 + b;
+
+    let shadowBoost = s * 1.5;
+    if(gray > 130){
+      r += shadowBoost;
+      g += shadowBoost;
+      bl += shadowBoost;
+    }
+
+    if(bwLevel > 0){
+      let cleanGray = 0.299*r + 0.587*g + 0.114*bl;
+      let threshold = 230 - bwLevel;
+      let ink = cleanGray < threshold ? Math.max(0, cleanGray - bwLevel * .8) : 255;
+
+      let mix = bwLevel / 100;
+      r = r * (1-mix) + ink * mix;
+      g = g * (1-mix) + ink * mix;
+      bl = bl * (1-mix) + ink * mix;
+    }
+
+    data[i] = clamp(r);
+    data[i+1] = clamp(g);
+    data[i+2] = clamp(bl);
   }
 
-  function applyBlackWhite(){
-    if (!originalImage) {
-      setStatus("Primero cargá una imagen.");
-      return;
-    }
+  ctx.putImageData(src,0,0);
 
-    restoreOriginal();
-
-    const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
-    const data = imgData.data;
-
-    for(let i=0; i<data.length; i+=4){
-      let gray = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
-      let bw = gray > 165 ? 255 : 0;
-
-      data[i] = bw;
-      data[i+1] = bw;
-      data[i+2] = bw;
-    }
-
-    ctx.putImageData(imgData,0,0);
-    setStatus("Modo blanco y negro aplicado.");
+  if(parseInt(sharp.value) > 0){
+    applySharpen(parseInt(sharp.value));
   }
+}
 
-  function sharpen(){
-    const w = canvas.width;
-    const h = canvas.height;
-    const src = ctx.getImageData(0,0,w,h);
-    const dst = ctx.createImageData(w,h);
+function applySharpen(amount){
+  const w = canvas.width;
+  const h = canvas.height;
 
-    const data = src.data;
-    const out = dst.data;
+  const src = ctx.getImageData(0,0,w,h);
+  const out = ctx.createImageData(w,h);
 
-    const kernel = [
-      0, -1,  0,
-     -1,  5, -1,
-      0, -1,  0
-    ];
+  const a = amount / 100;
+  const kernel = [
+    0, -a, 0,
+    -a, 1 + 4*a, -a,
+    0, -a, 0
+  ];
 
-    for(let y=1; y<h-1; y++){
-      for(let x=1; x<w-1; x++){
-        for(let c=0; c<3; c++){
-          let sum = 0;
-          let k = 0;
+  for(let y=1;y<h-1;y++){
+    for(let x=1;x<w-1;x++){
+      for(let ch=0;ch<3;ch++){
+        let sum = 0;
+        let k = 0;
 
-          for(let ky=-1; ky<=1; ky++){
-            for(let kx=-1; kx<=1; kx++){
-              const px = ((y+ky)*w + (x+kx))*4 + c;
-              sum += data[px] * kernel[k++];
-            }
+        for(let ky=-1;ky<=1;ky++){
+          for(let kx=-1;kx<=1;kx++){
+            const idx = ((y+ky)*w + (x+kx))*4 + ch;
+            sum += src.data[idx] * kernel[k++];
           }
-
-          const idx = (y*w+x)*4+c;
-          out[idx] = Math.max(0, Math.min(255, sum));
         }
 
-        out[(y*w+x)*4+3] = 255;
-      }
-    }
-
-    ctx.putImageData(dst,0,0);
-  }
-
-  function downloadImage(){
-    if (!originalImage) {
-      setStatus("Primero cargá una imagen.");
-      return;
-    }
-
-    const link = document.createElement("a");
-    link.download = "copia-clara.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-
-    setStatus("Imagen descargada.");
-  }
-
-  async function uploadImage(){
-    if (!originalImage) {
-      setStatus("Primero cargá una imagen.");
-      return;
-    }
-
-    if (!API_KEY || API_KEY === "TU_API_KEY_AQUI") {
-      setStatus("Falta colocar la API Key en el código.");
-      return;
-    }
-
-    setStatus("Generando enlace, esperá unos segundos...");
-
-    const base64 = canvas.toDataURL("image/png").split(",")[1];
-
-    const formData = new FormData();
-    formData.append("key", API_KEY);
-    formData.append("image", base64);
-
-    try{
-      const res = await fetch("https://api.imgbb.com/1/upload", {
-        method:"POST",
-        body:formData
-      });
-
-      const json = await res.json();
-
-      if(json.success){
-        generatedLink = json.data.url;
-        linkBox.style.display = "block";
-        linkBox.textContent = generatedLink;
-        setStatus("Enlace generado correctamente.");
-        generatePrompt();
-      }else{
-        setStatus("No se pudo generar el enlace.");
+        const idx = (y*w+x)*4 + ch;
+        out.data[idx] = clamp(sum);
       }
 
-    }catch(error){
-      console.error(error);
-      setStatus("Error al generar el enlace. Revisá internet o la API Key.");
+      out.data[(y*w+x)*4+3] = 255;
     }
   }
 
-  function generatePrompt(){
-    const mode = promptMode.value;
+  ctx.putImageData(out,0,0);
+}
 
-    let instruction = "";
+function autoClean(){
+  if(!baseImageData) return setStatus("Primero cargá una imagen.");
 
-    if(mode === "limpiar"){
-      instruction = "Limpia esta copia escolar. Eliminá sombras, marcas de lápiz, tachaduras, manchas y ruido visual. Mantené exactamente la misma estructura, textos, consignas, dibujos y ubicación de los elementos. Dejala en blanco y negro, nítida, prolija y lista para imprimir.";
+  brightness.value = 18;
+  contrast.value = 70;
+  shadow.value = 65;
+  sharp.value = 38;
+  bw.value = 75;
+
+  updateLabels();
+  applyLiveEffects();
+
+  setStatus("Limpieza automática aplicada. Ajustá los controles si hace falta.");
+}
+
+function downloadImage(){
+  if(!baseImageData) return setStatus("Primero cargá una imagen.");
+
+  const a = document.createElement("a");
+  a.href = canvas.toDataURL("image/png");
+  a.download = "copia-clara-pro.png";
+  a.click();
+
+  setStatus("Imagen descargada.");
+}
+
+async function uploadImage(){
+  if(!baseImageData) return setStatus("Primero cargá una imagen.");
+
+  if(!API_KEY || API_KEY === "9ed686117bdb0d5263132a2e5ec5b094"){
+    return setStatus("Falta colocar la API Key en el código.");
+  }
+
+  setStatus("Generando enlace...");
+
+  const base64 = canvas.toDataURL("image/png").split(",")[1];
+
+  const formData = new FormData();
+  formData.append("key", API_KEY);
+  formData.append("image", base64);
+
+  try{
+    const res = await fetch("https://api.imgbb.com/1/upload",{
+      method:"POST",
+      body:formData
+    });
+
+    const json = await res.json();
+
+    if(json.success){
+      generatedLink = json.data.url;
+      linkBox.style.display = "block";
+      linkBox.textContent = generatedLink;
+      generatePrompt();
+      setStatus("Enlace generado correctamente.");
+    }else{
+      setStatus("No se pudo generar el enlace.");
     }
 
-    if(mode === "colorear"){
-      instruction = "Convertí esta copia escolar en una versión limpia para colorear. Eliminá sombras, marcas de lápiz, colores previos, tachaduras y manchas. Mantené la misma estructura, textos, consignas y dibujos principales. Usá líneas negras claras sobre fondo blanco, estilo fotocopia infantil lista para imprimir y pintar.";
-    }
+  }catch(e){
+    console.error(e);
+    setStatus("Error al generar enlace. Revisá conexión o API Key.");
+  }
+}
 
-    if(mode === "reestructurar"){
-      instruction = "Rehacé esta copia escolar de forma más prolija y nítida, manteniendo la estructura original, el contenido, los textos, consignas, dibujos y espacios para completar. Corregí la perspectiva de foto, limpiá sombras y manchas, y dejala como una hoja escolar clara, ordenada y lista para imprimir.";
-    }
+function generatePrompt(){
+  const mode = promptMode.value;
 
-    if(mode === "color"){
-      instruction = "Mejorá esta copia escolar y generá una versión limpia con colores suaves e infantiles. Mantené la estructura original, textos, consignas y dibujos principales. Eliminá sombras, marcas, tachaduras y manchas. Que quede prolija, clara, imprimible y fácil de completar.";
-    }
+  let main = "";
 
-    const linkPart = generatedLink ? "\n\nImagen de referencia: " + generatedLink : "";
+  if(mode === "colorear"){
+    main = `Transformá esta foto de una copia escolar en una hoja limpia, nítida y lista para colorear.
 
-    promptText.value =
-`${instruction}
+Objetivo:
+Crear una versión en blanco y negro, con fondo blanco puro y líneas negras claras, como una fotocopia nueva para imprimir.
 
-IMPORTANTE:
+Instrucciones:
+- Eliminá sombras, manchas, arrugas, marcas de lápiz, tachaduras y suciedad visual.
+- Quitá colores o pintadas previas.
+- Conservá la estructura original de la actividad.
+- Conservá los textos, consignas, números, cuadros, dibujos y espacios para completar.
+- No inventes información nueva.
+- No cambies el sentido de la tarea.
+- Redibujá suavemente los dibujos si están borrosos, pero respetando su forma y posición.
+- Dejá los dibujos solo con contorno negro, estilo infantil para colorear.
+- La imagen final debe quedar centrada, recta, limpia y lista para imprimir en hoja A4.`;
+  }
+
+  if(mode === "limpiar"){
+    main = `Limpiá y mejorá esta foto de una copia escolar.
+
+Objetivo:
+Dejarla como una fotocopia clara, prolija, legible y lista para imprimir.
+
+Instrucciones:
+- Corregí inclinación y perspectiva si hace falta.
+- Eliminá sombras, manchas, ruido de cámara, marcas de lápiz, tachaduras y partes sucias.
+- Mejorá contraste y nitidez.
+- Mantené exactamente la misma estructura, textos, consignas, dibujos, cuadros y espacios.
+- No agregues contenido nuevo.
+- No borres información importante.
+- Que el resultado sea una hoja escolar limpia, de alto contraste y fácil de leer.`;
+  }
+
+  if(mode === "recrear"){
+    main = `Recreá esta copia escolar de forma prolija y profesional, manteniendo el diseño original.
+
+Objetivo:
+Generar una nueva versión más clara y ordenada, pero fiel a la copia original.
+
+Instrucciones:
+- Mantené la misma actividad, distribución, títulos, consignas, imágenes y espacios para completar.
+- Rehacé textos y líneas para que se vean nítidos.
+- Redibujá los dibujos de manera simple e infantil, respetando la idea original.
+- Eliminá sombras, manchas, tachaduras, marcas de lápiz y deformaciones de la foto.
+- No cambies palabras ni consignas.
+- No inventes ejercicios nuevos.
+- Entregá una imagen final limpia, centrada, recta y lista para imprimir en A4.`;
+  }
+
+  if(mode === "texto"){
+    main = `Mejorá la legibilidad de esta copia escolar.
+
+Objetivo:
+Que los textos, números y consignas se lean con máxima claridad.
+
+Instrucciones:
+- Aumentá nitidez y contraste.
+- Limpiá fondo, sombras, manchas y ruido.
+- Conservá la estructura original.
+- Mantené todos los textos y consignas sin cambiarlos.
+- Si alguna palabra está borrosa, reconstruí solo si se entiende por contexto.
+- No inventes información.
+- Resultado final: hoja clara, prolija y lista para que un niño la complete.`;
+  }
+
+  if(mode === "color"){
+    main = `Mejorá esta copia escolar y generá una versión limpia con color suave.
+
+Objetivo:
+Crear una hoja escolar prolija, clara y agradable para niños.
+
+Instrucciones:
+- Conservá textos, consignas, dibujos, cuadros y distribución original.
+- Limpiá sombras, manchas, tachaduras y marcas de lápiz.
+- Usá colores suaves e infantiles solo en dibujos o detalles.
+- No satures la imagen.
 - No cambies la actividad.
-- No inventes consignas nuevas.
-- No borres textos importantes.
-- Conservá el formato de hoja escolar.
-- La imagen final debe verse limpia, clara y lista para usar.${linkPart}`;
+- No inventes contenido.
+- La hoja debe quedar lista para imprimir o compartir.`;
   }
 
-  function copyPrompt(){
-    promptText.select();
-    document.execCommand("copy");
-    setStatus("Prompt copiado.");
-  }
+  const link = generatedLink ? `\n\nImagen de referencia:\n${generatedLink}` : "";
 
-  function copyLink(){
-    if(!generatedLink){
-      setStatus("Primero generá el enlace.");
-      return;
-    }
+  promptText.value = `${main}
 
-    navigator.clipboard.writeText(generatedLink);
-    setStatus("Enlace copiado.");
-  }
+Formato deseado:
+- Imagen vertical.
+- Fondo blanco.
+- Alta nitidez.
+- Sin bordes sucios.
+- Sin marcas de foto.
+- Lista para imprimir.
+- Mantener proporción de hoja escolar.${link}`;
+}
 
-  function resetAll(){
-    originalImage = null;
-    generatedLink = "";
-    fileInput.value = "";
-    canvas.style.display = "none";
-    linkBox.style.display = "none";
-    linkBox.textContent = "";
-    promptText.value = "";
-    setStatus("Todo limpio.");
-  }
+function copyPrompt(){
+  promptText.select();
+  document.execCommand("copy");
+  setStatus("Prompt copiado.");
+}
 
-  function setStatus(msg){
-    statusBox.textContent = msg;
-  }
+function copyLink(){
+  if(!generatedLink) return setStatus("Primero generá el enlace.");
+  navigator.clipboard.writeText(generatedLink);
+  setStatus("Enlace copiado.");
+}
 
-  generatePrompt();
+function clamp(v){
+  return Math.max(0, Math.min(255, v));
+}
+
+function setStatus(msg){
+  statusBox.textContent = msg;
+}
+
+updateLabels();
+generatePrompt();
 </script>
 
 </body>
