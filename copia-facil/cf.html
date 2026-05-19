@@ -3,854 +3,379 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Copia Clara PRO</title>
-
-<script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady()"></script>
-
+<title>Soporte IA Premium | IN-STORE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f3f5f8;
-  --card:#fff;
-  --text:#121212;
-  --muted:#6b7280;
-  --primary:#ff7a00;
-  --dark:#101114;
-  --green:#16a34a;
-  --border:#e5e7eb;
-}
+  :root {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --primary: #ff7a00;
+    --primary-hover: #e06b00;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --msg-user: #ff7a00;
+    --msg-bot: #334155;
+    --border: #475569;
+  }
 
-*{box-sizing:border-box}
+  * {
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
 
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:linear-gradient(180deg,#ffffff,#f3f5f8);
-  color:var(--text);
-}
+  body {
+    margin: 0;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    height: 100dvh;
+  }
 
-header{
-  background:#101114;
-  color:white;
-  padding:22px 16px;
-  text-align:center;
-}
+  .app {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
 
-header h1{
-  margin:0;
-  font-size:28px;
-}
+  @media (min-width: 640px) {
+    .app {
+      height: 85vh;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+  }
 
-header p{
-  margin:8px 0 0;
-  color:#d1d5db;
-  font-size:14px;
-}
+  header {
+    padding: 20px;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-main{
-  max-width:980px;
-  margin:auto;
-  padding:16px;
-}
+  .avatar-status {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 122, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--primary);
+  }
 
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:16px;
-  margin-bottom:16px;
-  box-shadow:0 12px 30px rgba(0,0,0,.07);
-}
+  .avatar-status::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border: 2px solid var(--bg-card);
+    border-radius: 50%;
+  }
 
-h2{
-  margin:0 0 12px;
-  font-size:19px;
-}
+  .header-info {
+    flex: 1;
+  }
 
-.grid{
-  display:grid;
-  gap:10px;
-}
+  header h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
 
-@media(min-width:720px){
-  .grid.two{grid-template-columns:1fr 1fr}
-  .grid.three{grid-template-columns:repeat(3,1fr)}
-}
+  header p {
+    margin: 2px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
 
-button,label.upload{
-  border:none;
-  border-radius:15px;
-  padding:14px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-  text-align:center;
-  background:#111;
-  color:white;
-}
+  .chat {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+  }
 
-button.primary,label.upload{
-  background:var(--primary);
-}
+  /* Custom Scrollbar */
+  .chat::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
 
-button.gray{
-  background:#e5e7eb;
-  color:#111;
-}
+  .msg {
+    padding: 14px 18px;
+    border-radius: 18px;
+    max-width: 85%;
+    line-height: 1.5;
+    font-size: 15px;
+    animation: fadeIn 0.3s ease-out forwards;
+    word-break: break-word;
+  }
 
-button.green{
-  background:var(--green);
-}
+  .user {
+    background: var(--msg-user);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 12px rgba(255, 122, 0, 0.2);
+  }
 
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
+  .bot {
+    background: var(--msg-bot);
+    color: var(--text-main);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
 
-input[type=file]{
-  display:none;
-}
+  .form {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    background: rgba(30, 41, 59, 0.9);
+    border-top: 1px solid var(--border);
+  }
 
-.previewWrap{
-  background:#eef0f3;
-  border-radius:18px;
-  padding:10px;
-  border:1px dashed #c8ccd2;
-  overflow:hidden;
-}
+  .input-wrapper {
+    position: relative;
+    flex: 1;
+  }
 
-canvas{
-  width:100%;
-  max-height:75vh;
-  object-fit:contain;
-  background:white;
-  border-radius:14px;
-  display:none;
-}
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
 
-.controls{
-  display:grid;
-  gap:12px;
-  margin-top:14px;
-}
+  input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.15);
+  }
 
-.control{
-  background:#f8f8f8;
-  border:1px solid #eee;
-  border-radius:16px;
-  padding:12px;
-}
+  input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 
-.control label{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-  font-weight:700;
-  color:#444;
-  margin-bottom:8px;
-}
+  button {
+    border: none;
+    background: var(--primary);
+    color: white;
+    padding: 0 20px;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-input[type=range],select{
-  width:100%;
-}
+  button:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+  }
 
-input[type=range]{
-  accent-color:var(--primary);
-}
+  button:active:not(:disabled) {
+    transform: translateY(1px);
+  }
 
-select,textarea,input[type=text]{
-  width:100%;
-  border:1px solid #d1d5db;
-  border-radius:14px;
-  padding:13px;
-  font-size:14px;
-}
+  button:disabled {
+    background: var(--border);
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
 
-textarea{
-  min-height:240px;
-  resize:vertical;
-  line-height:1.45;
-}
+  /* Loader Animado CSS */
+  .typing-indicator {
+    display: flex;
+    gap: 5px;
+    padding: 6px 4px;
+    align-items: center;
+  }
 
-.status{
-  font-size:14px;
-  color:var(--muted);
-  margin-top:10px;
-}
+  .typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+  }
 
-.result{
-  display:none;
-  padding:12px;
-  background:#f3f4f6;
-  border-radius:14px;
-  word-break:break-all;
-  font-size:14px;
-  margin-top:10px;
-}
+  .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+  .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
 
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  background:#fff3e6;
-  color:#b45309;
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:10px;
-}
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+  }
 
-.small{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-}
-
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
-
 <body>
 
-<header>
-  <h1>Copia Clara PRO</h1>
-  <p>Escaneá, limpiá y prepará copias escolares para imprimir o mejorar con IA.</p>
-</header>
-
-<main>
-
-<section class="card">
-  <span class="badge">Paso 1</span>
-  <h2>Cargar imagen</h2>
-
-  <div class="grid two">
-    <label class="upload">
-      Elegir desde galería
-      <input id="galleryInput" type="file" accept="image/*">
-    </label>
-
-    <label class="upload">
-      Tomar foto
-      <input id="cameraInput" type="file" accept="image/*" capture="environment">
-    </label>
-  </div>
-
-  <p class="small">
-    Para mejores resultados: sacá la foto de frente, con buena luz, y que la hoja ocupe casi toda la imagen.
-  </p>
-</section>
-
-<section class="card">
-  <span class="badge">Paso 2</span>
-  <h2>Vista previa</h2>
-
-  <div class="previewWrap">
-    <canvas id="canvas"></canvas>
-  </div>
-
-  <div class="grid two" style="margin-top:12px;">
-    <button class="primary" onclick="detectAndCropPaper()">Detectar hoja</button>
-    <button onclick="autoClean()">Limpieza automática</button>
-    <button class="gray" onclick="restoreOriginal()">Volver a original</button>
-    <button class="green" onclick="downloadImage()">Descargar imagen</button>
-  </div>
-
-  <div class="controls">
-    <div class="control">
-      <label>Brillo <span id="brightnessVal">12</span>%</label>
-      <input id="brightness" type="range" min="-80" max="100" value="12">
+<div class="app">
+  <header>
+    <div class="avatar-status">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff7a00" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"/><path d="M12 6v6l4 2"/></svg>
     </div>
-
-    <div class="control">
-      <label>Contraste <span id="contrastVal">45</span>%</label>
-      <input id="contrast" type="range" min="-50" max="130" value="45">
+    <div class="header-info">
+      <h1>Soporte IN-STORE</h1>
+      <p>Asistente Virtual Activo</p>
     </div>
+  </header>
 
-    <div class="control">
-      <label>Sombras / fondo blanco <span id="shadowVal">35</span>%</label>
-      <input id="shadow" type="range" min="0" max="100" value="35">
-    </div>
-
-    <div class="control">
-      <label>Nitidez <span id="sharpVal">25</span>%</label>
-      <input id="sharp" type="range" min="0" max="100" value="25">
-    </div>
-
-    <div class="control">
-      <label>Blanco y negro <span id="bwVal">40</span>%</label>
-      <input id="bw" type="range" min="0" max="100" value="40">
-    </div>
+  <div id="chat" class="chat">
+    <div class="msg bot">Hola 👋, soy el asistente inteligente de IN-STORE. ¿En qué te puedo ayudar hoy?</div>
   </div>
 
-  <div id="status" class="status">Esperando imagen...</div>
-</section>
-
-<section class="card">
-  <span class="badge">Paso 3</span>
-  <h2>Generar enlace</h2>
-
-  <button class="primary" onclick="uploadImage()">Generar enlace de imagen</button>
-  <div id="linkBox" class="result"></div>
-
-  <div class="grid two" style="margin-top:10px;">
-    <button class="gray" onclick="copyLink()">Copiar enlace</button>
+  <div class="form">
+    <div class="input-wrapper">
+      <input id="message" placeholder="Escribí tu consulta..." maxlength="1000" autocomplete="off">
+    </div>
+    <button id="sendBtn" onclick="sendMessage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
   </div>
-</section>
-
-<section class="card">
-  <span class="badge">Paso 4</span>
-  <h2>Prompt inteligente</h2>
-
-  <select id="promptMode" onchange="generatePrompt()">
-    <option value="colorear">Dejar lista para colorear</option>
-    <option value="limpiar">Solo limpiar y mejorar</option>
-    <option value="recrear">Recrear prolija manteniendo todo</option>
-    <option value="texto">Mejorar lectura de texto</option>
-    <option value="color">Versión color suave</option>
-  </select>
-
-  <textarea id="promptText"></textarea>
-
-  <div class="grid two" style="margin-top:10px;">
-    <button class="primary" onclick="copyPrompt()">Copiar prompt</button>
-    <button class="gray" onclick="generatePrompt()">Actualizar prompt</button>
-    <button onclick="openChatGPTWithPrompt()">
-  Abrir en ChatGPT
-</button>
-  </div>
-</section>
-
-</main>
+</div>
 
 <script>
-const API_KEY = "9ed686117bdb0d5263132a2e5ec5b094";
+const API_URL = "https://script.google.com/macros/s/AKfycbwM5dJmva__H9jAchTv3EFbQ7FmvxnaAR1enomditproS3QRAgjWfuryehNh7JgYMHl/exec";
 
-let cvReady = false;
-let originalImage = null;
-let baseImageData = null;
-let generatedLink = "";
+const chat = document.getElementById("chat");
+const input = document.getElementById("message");
+const sendBtn = document.getElementById("sendBtn");
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d", { willReadFrequently:true });
-
-const galleryInput = document.getElementById("galleryInput");
-const cameraInput = document.getElementById("cameraInput");
-
-const brightness = document.getElementById("brightness");
-const contrast = document.getElementById("contrast");
-const shadow = document.getElementById("shadow");
-const sharp = document.getElementById("sharp");
-const bw = document.getElementById("bw");
-
-const brightnessVal = document.getElementById("brightnessVal");
-const contrastVal = document.getElementById("contrastVal");
-const shadowVal = document.getElementById("shadowVal");
-const sharpVal = document.getElementById("sharpVal");
-const bwVal = document.getElementById("bwVal");
-
-const statusBox = document.getElementById("status");
-const linkBox = document.getElementById("linkBox");
-const promptText = document.getElementById("promptText");
-const promptMode = document.getElementById("promptMode");
-
-function onOpenCvReady(){
-  cv["onRuntimeInitialized"] = () => {
-    cvReady = true;
-    setStatus("Sistema listo. Podés cargar una imagen.");
-  };
-}
-
-galleryInput.addEventListener("change", e => loadFile(e.target.files[0]));
-cameraInput.addEventListener("change", e => loadFile(e.target.files[0]));
-
-[brightness, contrast, shadow, sharp, bw].forEach(input=>{
-  input.addEventListener("input", ()=>{
-    updateLabels();
-    applyLiveEffects();
-  });
+// Habilita/Deshabilita botón según el texto
+input.addEventListener("input", () => {
+  sendBtn.disabled = !input.value.trim();
 });
-
-function updateLabels(){
-  brightnessVal.textContent = brightness.value;
-  contrastVal.textContent = contrast.value;
-  shadowVal.textContent = shadow.value;
-  sharpVal.textContent = sharp.value;
-  bwVal.textContent = bw.value;
-}
-
-function loadFile(file){
-  if(!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    const img = new Image();
-
-    img.onload = () => {
-      originalImage = img;
-
-      const maxW = 1800;
-      const scale = Math.min(1, maxW / img.width);
-
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-
-      ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      canvas.style.display = "block";
-
-      baseImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-
-      setStatus("Imagen cargada. Podés detectar la hoja o ajustar la limpieza.");
-      generatedLink = "";
-      linkBox.style.display = "none";
-      generatePrompt();
-      applyLiveEffects();
-    };
-
-    img.src = ev.target.result;
-  };
-
-  reader.readAsDataURL(file);
-}
-
-function restoreOriginal(){
-  if(!originalImage) return setStatus("Primero cargá una imagen.");
-
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(originalImage,0,0,canvas.width,canvas.height);
-  baseImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-  applyLiveEffects();
-  setStatus("Imagen original restaurada.");
-}
-
-function detectAndCropPaper(){
-  if(!cvReady) return setStatus("El detector todavía está cargando. Esperá unos segundos.");
-  if(!originalImage) return setStatus("Primero cargá una imagen.");
-
-  try{
-    let src = cv.imread(canvas);
-    let gray = new cv.Mat();
-    let blur = new cv.Mat();
-    let edges = new cv.Mat();
-    let contours = new cv.MatVector();
-    let hierarchy = new cv.Mat();
-
-    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.GaussianBlur(gray, blur, new cv.Size(5,5), 0);
-    cv.Canny(blur, edges, 50, 150);
-
-    cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-
-    let best = null;
-    let bestArea = 0;
-
-    for(let i=0;i<contours.size();i++){
-      let cnt = contours.get(i);
-      let peri = cv.arcLength(cnt,true);
-      let approx = new cv.Mat();
-
-      cv.approxPolyDP(cnt, approx, 0.02 * peri, true);
-
-      let area = cv.contourArea(approx);
-
-      if(approx.rows === 4 && area > bestArea){
-        bestArea = area;
-        best = approx;
-      }else{
-        approx.delete();
-      }
-
-      cnt.delete();
-    }
-
-    if(!best || bestArea < canvas.width * canvas.height * 0.15){
-      src.delete(); gray.delete(); blur.delete(); edges.delete(); contours.delete(); hierarchy.delete();
-      if(best) best.delete();
-      return setStatus("No pude detectar la hoja con seguridad. Probá una foto más de frente y con mejor contraste.");
-    }
-
-    let points = [];
-    for(let i=0;i<4;i++){
-      points.push({
-        x:best.intPtr(i,0)[0],
-        y:best.intPtr(i,0)[1]
-      });
-    }
-
-    points = orderPoints(points);
-
-    const widthTop = distance(points[0], points[1]);
-    const widthBottom = distance(points[3], points[2]);
-    const heightLeft = distance(points[0], points[3]);
-    const heightRight = distance(points[1], points[2]);
-
-    const dstW = Math.max(widthTop,widthBottom);
-    const dstH = Math.max(heightLeft,heightRight);
-
-    let srcTri = cv.matFromArray(4,1,cv.CV_32FC2,[
-      points[0].x,points[0].y,
-      points[1].x,points[1].y,
-      points[2].x,points[2].y,
-      points[3].x,points[3].y
-    ]);
-
-    let dstTri = cv.matFromArray(4,1,cv.CV_32FC2,[
-      0,0,
-      dstW,0,
-      dstW,dstH,
-      0,dstH
-    ]);
-
-    let M = cv.getPerspectiveTransform(srcTri,dstTri);
-    let dst = new cv.Mat();
-
-    cv.warpPerspective(src,dst,M,new cv.Size(dstW,dstH),cv.INTER_LINEAR,cv.BORDER_CONSTANT,new cv.Scalar());
-
-    canvas.width = dstW;
-    canvas.height = dstH;
-
-    cv.imshow(canvas,dst);
-
-    baseImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-    applyLiveEffects();
-
-    src.delete(); gray.delete(); blur.delete(); edges.delete(); contours.delete(); hierarchy.delete();
-    best.delete(); srcTri.delete(); dstTri.delete(); M.delete(); dst.delete();
-
-    setStatus("Hoja detectada y recortada correctamente.");
-
-  }catch(err){
-    console.error(err);
-    setStatus("Hubo un error detectando la hoja. Probá con otra foto.");
-  }
-}
-
-function orderPoints(pts){
-  pts.sort((a,b)=>(a.x+a.y)-(b.x+b.y));
-  const tl = pts[0];
-  const br = pts[3];
-
-  const middle = [pts[1],pts[2]];
-  middle.sort((a,b)=>(a.y-a.x)-(b.y-b.x));
-
-  const tr = middle[0];
-  const bl = middle[1];
-
-  return [tl,tr,br,bl];
-}
-
-function distance(a,b){
-  return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2);
-}
-
-function applyLiveEffects(){
-  if(!baseImageData) return;
-
-  const src = new ImageData(
-    new Uint8ClampedArray(baseImageData.data),
-    baseImageData.width,
-    baseImageData.height
-  );
-
-  let data = src.data;
-
-  const b = parseInt(brightness.value);
-  const c = parseInt(contrast.value);
-  const s = parseInt(shadow.value);
-  const bwLevel = parseInt(bw.value);
-
-  const factor = (259 * (c + 255)) / (255 * (259 - c));
-
-  for(let i=0;i<data.length;i+=4){
-    let r = data[i];
-    let g = data[i+1];
-    let bl = data[i+2];
-
-    let gray = 0.299*r + 0.587*g + 0.114*bl;
-
-    r = factor * (r - 128) + 128 + b;
-    g = factor * (g - 128) + 128 + b;
-    bl = factor * (bl - 128) + 128 + b;
-
-    let shadowBoost = s * 1.5;
-    if(gray > 130){
-      r += shadowBoost;
-      g += shadowBoost;
-      bl += shadowBoost;
-    }
-
-    if(bwLevel > 0){
-      let cleanGray = 0.299*r + 0.587*g + 0.114*bl;
-      let threshold = 230 - bwLevel;
-      let ink = cleanGray < threshold ? Math.max(0, cleanGray - bwLevel * .8) : 255;
-
-      let mix = bwLevel / 100;
-      r = r * (1-mix) + ink * mix;
-      g = g * (1-mix) + ink * mix;
-      bl = bl * (1-mix) + ink * mix;
-    }
-
-    data[i] = clamp(r);
-    data[i+1] = clamp(g);
-    data[i+2] = clamp(bl);
-  }
-
-  ctx.putImageData(src,0,0);
-
-  if(parseInt(sharp.value) > 0){
-    applySharpen(parseInt(sharp.value));
-  }
-}
-
-function applySharpen(amount){
-  const w = canvas.width;
-  const h = canvas.height;
-
-  const src = ctx.getImageData(0,0,w,h);
-  const out = ctx.createImageData(w,h);
-
-  const a = amount / 100;
-  const kernel = [
-    0, -a, 0,
-    -a, 1 + 4*a, -a,
-    0, -a, 0
-  ];
-
-  for(let y=1;y<h-1;y++){
-    for(let x=1;x<w-1;x++){
-      for(let ch=0;ch<3;ch++){
-        let sum = 0;
-        let k = 0;
-
-        for(let ky=-1;ky<=1;ky++){
-          for(let kx=-1;kx<=1;kx++){
-            const idx = ((y+ky)*w + (x+kx))*4 + ch;
-            sum += src.data[idx] * kernel[k++];
-          }
-        }
-
-        const idx = (y*w+x)*4 + ch;
-        out.data[idx] = clamp(sum);
-      }
-
-      out.data[(y*w+x)*4+3] = 255;
-    }
-  }
-
-  ctx.putImageData(out,0,0);
-}
-
-function autoClean(){
-  if(!baseImageData) return setStatus("Primero cargá una imagen.");
-
-  brightness.value = 18;
-  contrast.value = 70;
-  shadow.value = 65;
-  sharp.value = 38;
-  bw.value = 75;
-
-  updateLabels();
-  applyLiveEffects();
-
-  setStatus("Limpieza automática aplicada. Ajustá los controles si hace falta.");
-}
-
-function downloadImage(){
-  if(!baseImageData) return setStatus("Primero cargá una imagen.");
-
-  const a = document.createElement("a");
-  a.href = canvas.toDataURL("image/png");
-  a.download = "copia-clara-pro.png";
-  a.click();
-
-  setStatus("Imagen descargada.");
-}
-
-async function uploadImage(){
-  if(!baseImageData) return setStatus("Primero cargá una imagen.");
-
-  if(!API_KEY || API_KEY === "9ed686117bdb0d5263132a2e5ec5b094"){
-    return setStatus("Falta colocar la API Key en el código.");
-  }
-
-  setStatus("Generando enlace...");
-
-  const base64 = canvas.toDataURL("image/png").split(",")[1];
-
-  const formData = new FormData();
-  formData.append("key", API_KEY);
-  formData.append("image", base64);
-
-  try{
-    const res = await fetch("https://api.imgbb.com/1/upload",{
-      method:"POST",
-      body:formData
+sendBtn.disabled = true; // Estado inicial
+
+async function sendMessage(){
+  const text = input.value.trim();
+  if(!text) return;
+
+  // Renderizar mensaje de usuario
+  addMessage(text, "user");
+  input.value = "";
+  sendBtn.disabled = true;
+  
+  // Bloquear input temporalmente
+  input.disabled = true;
+
+  // Agregar indicador de escritura pro
+  const loadingDiv = addLoadingIndicator();
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ message: text })
     });
 
-    const json = await res.json();
+    const data = await res.json();
+    loadingDiv.remove(); // Quitamos los puntitos animados
 
-    if(json.success){
-      generatedLink = json.data.url;
-      linkBox.style.display = "block";
-      linkBox.textContent = generatedLink;
-      generatePrompt();
-      setStatus("Enlace generado correctamente.");
-    }else{
-      setStatus("No se pudo generar el enlace.");
+    // Efecto de escritura pro para la respuesta
+    const botMsgDiv = addMessage("", "bot");
+    typeWriterEffect(botMsgDiv, data.reply || "No recibí respuesta del servidor.");
+
+  } catch(e) {
+    loadingDiv.remove();
+    const errorDiv = addMessage("⚠️ No pude conectar con el soporte IA. Por favor, reintentá.", "bot");
+    errorDiv.style.borderColor = "#ef4444";
+  } finally {
+    input.disabled = false;
+    input.focus();
+  }
+}
+
+function addMessage(text, type){
+  const div = document.createElement("div");
+  div.className = `msg ${type}`;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function addLoadingIndicator() {
+  const div = document.createElement("div");
+  div.className = "msg bot";
+  div.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+  chat.appendChild(div);
+  return div;
+}
+
+// Simula la escritura fluida de las IA modernas (Streaming effect)
+// Simula escritura fluida tipo IA moderna
+function typeWriterEffect(element, text) {
+
+  let index = 0;
+
+  function type() {
+
+    if(index < text.length){
+
+      element.textContent += text.charAt(index);
+
+      index++;
+
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(type, 8);
+
     }
 
-  }catch(e){
-    console.error(e);
-    setStatus("Error al generar enlace. Revisá conexión o API Key.");
-  }
-}
-
-function generatePrompt(){
-  const mode = promptMode.value;
-
-  let main = "";
-
-  if(mode === "colorear"){
-    main = `Transformá esta foto de una copia escolar en una hoja limpia, nítida y lista para colorear.
-
-Objetivo:
-Crear una versión en blanco y negro, con fondo blanco puro y líneas negras claras, como una fotocopia nueva para imprimir.
-
-Instrucciones:
-- Eliminá sombras, manchas, arrugas, marcas de lápiz, tachaduras y suciedad visual.
-- Quitá colores o pintadas previas.
-- Conservá la estructura original de la actividad.
-- Conservá los textos, consignas, números, cuadros, dibujos y espacios para completar.
-- No inventes información nueva.
-- No cambies el sentido de la tarea.
-- Redibujá suavemente los dibujos si están borrosos, pero respetando su forma y posición.
-- Dejá los dibujos solo con contorno negro, estilo infantil para colorear.
-- La imagen final debe quedar centrada, recta, limpia y lista para imprimir en hoja A4.`;
   }
 
-  if(mode === "limpiar"){
-    main = `Limpiá y mejorá esta foto de una copia escolar.
+  type();
 
-Objetivo:
-Dejarla como una fotocopia clara, prolija, legible y lista para imprimir.
+}
 
-Instrucciones:
-- Corregí inclinación y perspectiva si hace falta.
-- Eliminá sombras, manchas, ruido de cámara, marcas de lápiz, tachaduras y partes sucias.
-- Mejorá contraste y nitidez.
-- Mantené exactamente la misma estructura, textos, consignas, dibujos, cuadros y espacios.
-- No agregues contenido nuevo.
-- No borres información importante.
-- Que el resultado sea una hoja escolar limpia, de alto contraste y fácil de leer.`;
+// Enter para enviar
+input.addEventListener("keydown", e => {
+
+  if(e.key === "Enter" && !input.disabled){
+
+    sendMessage();
+
   }
 
-  if(mode === "recrear"){
-    main = `Recreá esta copia escolar de forma prolija y profesional, manteniendo el diseño original.
-
-Objetivo:
-Generar una nueva versión más clara y ordenada, pero fiel a la copia original.
-
-Instrucciones:
-- Mantené la misma actividad, distribución, títulos, consignas, imágenes y espacios para completar.
-- Rehacé textos y líneas para que se vean nítidos.
-- Redibujá los dibujos de manera simple e infantil, respetando la idea original.
-- Eliminá sombras, manchas, tachaduras, marcas de lápiz y deformaciones de la foto.
-- No cambies palabras ni consignas.
-- No inventes ejercicios nuevos.
-- Entregá una imagen final limpia, centrada, recta y lista para imprimir en A4.`;
-  }
-
-  if(mode === "texto"){
-    main = `Mejorá la legibilidad de esta copia escolar.
-
-Objetivo:
-Que los textos, números y consignas se lean con máxima claridad.
-
-Instrucciones:
-- Aumentá nitidez y contraste.
-- Limpiá fondo, sombras, manchas y ruido.
-- Conservá la estructura original.
-- Mantené todos los textos y consignas sin cambiarlos.
-- Si alguna palabra está borrosa, reconstruí solo si se entiende por contexto.
-- No inventes información.
-- Resultado final: hoja clara, prolija y lista para que un niño la complete.`;
-  }
-
-  if(mode === "color"){
-    main = `Mejorá esta copia escolar y generá una versión limpia con color suave.
-
-Objetivo:
-Crear una hoja escolar prolija, clara y agradable para niños.
-
-Instrucciones:
-- Conservá textos, consignas, dibujos, cuadros y distribución original.
-- Limpiá sombras, manchas, tachaduras y marcas de lápiz.
-- Usá colores suaves e infantiles solo en dibujos o detalles.
-- No satures la imagen.
-- No cambies la actividad.
-- No inventes contenido.
-- La hoja debe quedar lista para imprimir o compartir.`;
-  }
-
-  const link = generatedLink ? `\n\nImagen de referencia:\n${generatedLink}` : "";
-
-  promptText.value = `${main}
-
-Formato deseado:
-- Imagen vertical.
-- Fondo blanco.
-- Alta nitidez.
-- Sin bordes sucios.
-- Sin marcas de foto.
-- Lista para imprimir.
-- Mantener proporción de hoja escolar.${link}`;
-}
-
-function copyPrompt(){
-  promptText.select();
-  document.execCommand("copy");
-  setStatus("Prompt copiado.");
-}
-
-function copyLink(){
-  if(!generatedLink) return setStatus("Primero generá el enlace.");
-  navigator.clipboard.writeText(generatedLink);
-  setStatus("Enlace copiado.");
-}
-
-function clamp(v){
-  return Math.max(0, Math.min(255, v));
-}
-
-function setStatus(msg){
-  statusBox.textContent = msg;
-}
-
-function openChatGPTWithPrompt(){
-
-  const prompt = `
-Convertí esta foto de una copia escolar en una versión limpia, vacía y lista para imprimir.
-
-IMPORTANTE:
-- Eliminá respuestas escritas con lápiz.
-- Quitá tachaduras y marcas.
-- Conservá solo la estructura original.
-- No completes ejercicios.
-- Fondo blanco puro.
-- Líneas negras claras.
-- Lista para colorear o completar.
-
-Imagen de referencia:
-https://tu-enlace-de-imagen.com/imagen.png
-`;
-
-  const url =
-    "https://chatgpt.com/?q=" +
-    encodeURIComponent(prompt);
-
-  window.open(url, "_blank");
-}
-
-
-updateLabels();
-generatePrompt();
+});
 </script>
 
 </body>
